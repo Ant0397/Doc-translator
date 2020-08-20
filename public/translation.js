@@ -32,4 +32,5 @@ async function appendTranslationData()
 
     originalDocument.innerHTML = file.content 
     translatedDocument.innerHTML = file.translatedContent
+    document.querySelector('.right > h2').innerText = file.targetLang + ' Translation'
 }
