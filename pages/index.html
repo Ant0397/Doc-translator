@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="index.js"></script>
+    <title>Document Translator</title>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Upload a document to begin (.doc, .docx)</h1>
+        </div>
+        <div class="content">
+            <input hidden class="item" id="file-select-hidden" type="file">
+            <button class="item" id="upload-file">Select File</button>
+            <select disabled class="item" id="language-select">
+                <option selected value="default">Languages</option>
+            </select>
+            <button type="button" disabled class="item" id="translate">Translate</button>
+        </div>
+    </div>
+</body>
+</html>
