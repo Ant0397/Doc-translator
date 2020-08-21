@@ -77,12 +77,20 @@ router.post('/upload', async (req, res) => {
 // GET create document and download
 router.get('/download/:id', findFile, async (req, res) => {
     try {
-        let blob = htmlDocx.asBlob(res.file.translatedContent)
         let name = `${res.file.filename} (${res.file.targetLang}).${res.file.ext}`
         let filePath = path.join(tempDirectory, name)
-        fs.writeFileSync(filePath, blob) // create document in /tmp from blob
 
-        res.download(filePath) // download document
+        switch (res.file.textType) {
+            case 'html':
+                let blob = htmlDocx.asBlob(res.file.translatedContent) // convert html to blob
+                fs.writeFileSync(filePath, blob)
+                break 
+
+            case 'plain':
+                fs.writeFileSync(filePath, res.file.translatedContent)
+        }
+        
+        res.download(filePath)
 
         setTimeout(() => {
             fs.unlinkSync(filePath) // clear /tmp directory
