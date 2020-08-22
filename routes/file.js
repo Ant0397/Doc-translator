@@ -79,7 +79,7 @@ router.get('/download/:id', findFile, async (req, res) => {
     try {
         let name = `${res.file.filename} (${res.file.targetLang}).${res.file.ext}`
         let filePath = path.join(tempDirectory, name)
-
+        console.log(res.file)
         switch (res.file.textType) {
             case 'html':
                 let blob = htmlDocx.asBlob(res.file.translatedContent) // convert html to blob

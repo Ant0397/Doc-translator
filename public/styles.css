@@ -2,13 +2,13 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
     background-color: rgba(240, 128, 128, 0.623);
     color: rgb(128, 0, 0);
     max-width: 100vw;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .container {
@@ -26,7 +26,7 @@ body {
     font-size: 3.5vh;
 }
 
-.content {
+.form {
     margin: 5vh;
     display: flex;
     flex-direction: column;
@@ -132,4 +132,40 @@ h2 {
 .sticky .nav-item.right {
     margin-left: 1vw;
     border-left: 2px solid rgb(128, 0, 0)
+}
+
+.recents {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 10vh;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 200px;
+    height: fit-content;
+    padding: 10px;
+    overflow-wrap: break-word;
+}
+
+.wrapper:hover {
+    background-color: rgba(241, 90, 90, 0.623);
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.wrapper.selected {
+    background-color: rgba(241, 90, 90, 0.623);
+    border-radius: 20px;
+}
+
+i {
+    margin: 1vh;
+}
+
+p {
+    margin: 1vh;
+    text-align: center;
 }

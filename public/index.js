@@ -3,6 +3,7 @@ const fileSelectHidden = document.getElementById('file-select-hidden')
 const uploadFileBtn = document.getElementById('upload-file')
 const langSelect = document.getElementById('language-select')
 const translateBtn = document.getElementById('translate')
+const recentDocs = document.querySelectorAll('.wrapper')
 const supportedFiles = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'] // mimetypes
 
 populateDropdown()  
@@ -55,10 +56,9 @@ function enableElement(element)
 }
 
 
-async function handleEvent(event) // switch statement to handle user input depending on application state
+async function handleEvent(event, doc=null) // switch statement to handle user input depending on application state
 {
     let selectedOption = document.querySelector('option:checked')
-
     switch (event.target) {
 
         // upload file
@@ -81,9 +81,9 @@ async function handleEvent(event) // switch statement to handle user input depen
                     uploadFileBtn.innerText = 'File Uploaded'
                     titleElement.innerText = 'Select the language you want to translate to'
                     sessionStorage.setItem('fileId', upload.fileId)
+                    return
                 }
             }
-        break
 
         // select language
         case langSelect: 
@@ -92,7 +92,7 @@ async function handleEvent(event) // switch statement to handle user input depen
             } else {
                 titleElement.innerText = 'Your document will be translated into ' + selectedOption.innerText
             }
-            break
+            return
 
         // translate
         case translateBtn:
@@ -102,6 +102,7 @@ async function handleEvent(event) // switch statement to handle user input depen
                 await translate(langSelect.value, langSelect.selectedOptions[0].innerText.split(' ')[0])
                 window.location.href = '/translation'
             }
+            return
     }
 }
 
