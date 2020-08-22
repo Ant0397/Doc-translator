@@ -24,6 +24,13 @@ translateBtn.addEventListener('click', (e) => {
     handleEvent(e)
 })
 
+recentDocs.forEach(doc => {
+    doc.addEventListener('click', () => {
+        sessionStorage.setItem('fileId', doc.id)
+        window.location.href = '/translation/' + doc.id
+    })
+})
+
 
 async function uploadFile(file)
 {
@@ -100,7 +107,7 @@ async function handleEvent(event, doc=null) // switch statement to handle user i
                 titleElement.innerText = 'Please select a language before continuing'
             } else {
                 await translate(langSelect.value, langSelect.selectedOptions[0].innerText.split(' ')[0])
-                window.location.href = '/translation'
+                window.location.href = '/translation/' + sessionStorage.getItem('fileId')
             }
             return
     }
