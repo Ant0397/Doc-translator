@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="translation.js"></script>
+    <link rel="stylesheet" href="../styles.css">
+    <script defer src="../translation.js"></script>
     <title>Document Translator</title>
 </head>
 <body>
@@ -19,13 +19,21 @@
         <div class="document-container">
             <div class="left">
                 <h2>Original</h2>
-                <div id="original" class="document"></div>
+                <div id="original" class="document">
+                    <%= file.content %>
+                </div>
             </div>
             <div class="right">
-                <h2>Translation</h2>
-                <div id="translation" class="document"></div>
+                <h2><%=file.targetLang %> Translation</h2>
+                <div id="translation" class="document">
+                    <%= file.translatedContent %>
+                </div>
             </div>
         </div>
     </div>
 </body>
+<script>
+    document.getElementById('original').innerHTML = document.getElementById('original').innerText
+    document.getElementById('translation').innerHTML = document.getElementById('translation').innerText
+</script>
 </html>

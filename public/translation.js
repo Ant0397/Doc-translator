@@ -5,8 +5,6 @@ const originalDocument = document.getElementById('original')
 const translatedDocument = document.getElementById('translation')
 const sticky = navElement.offsetTop
 
-appendTranslationData()
-
 // sticky nav
 window.onscroll = () => {
     if (window.pageYOffset > sticky) {
@@ -24,13 +22,3 @@ backBtn.addEventListener('click', () => {
 downloadBtn.addEventListener('click', () => {
     window.location.href = '/file/download/' + sessionStorage.getItem('fileId')
 })
-
-
-async function appendTranslationData()
-{
-    let file = await fetch(`/file/content/${sessionStorage.getItem('fileId')}`).then(res => res.json())
-
-    originalDocument.innerHTML = file.content 
-    translatedDocument.innerHTML = file.translatedContent
-    document.querySelector('.right > h2').innerText = file.targetLang + ' Translation'
-}

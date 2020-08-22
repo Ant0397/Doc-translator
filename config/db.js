@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const File = require('../models/File')
 
 const connectDB = async () => {
     try {
@@ -15,4 +16,22 @@ const connectDB = async () => {
     }
 }
 
-module.exports = connectDB
+const clearInProgress = () => { // removes files from DB that did not complete full translation process 
+    try {
+        const db = mongoose.connection
+        db.once('open', async () => {
+            const files = await File.find()
+            for (const file of files ) {
+                if (file.translatedContent == null) {
+                    file.remove()
+                }
+            }
+        })
+    } catch (e) {
+        console.error(e)
+        process.exit(1)
+    }
+}
+
+exports.connectDB = connectDB
+exports.clearInProgress = clearInProgress
