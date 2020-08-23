@@ -1,6 +1,4 @@
 const router = require('express').Router()
-const path = require('path')
-const fs = require('fs')
 const File = require('../models/File')
 const findFile = require('./file').findFile
 

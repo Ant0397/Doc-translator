@@ -63,7 +63,7 @@ function enableElement(element)
 }
 
 
-async function handleEvent(event, doc=null) // switch statement to handle user input depending on application state
+async function handleEvent(event) // switch statement to handle user input depending on application state
 {
     let selectedOption = document.querySelector('option:checked')
     switch (event.target) {
@@ -81,7 +81,7 @@ async function handleEvent(event, doc=null) // switch statement to handle user i
                 } else if (upload.status == 415) {
                     titleElement.innerText = 'Please ensure your file does not contain images'
                     return
-                } else { // proceed as normal
+                } else { // proceed
                     disableElement(uploadFileBtn)
                     enableElement(langSelect)
                     enableElement(translateBtn)
