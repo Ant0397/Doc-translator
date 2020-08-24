@@ -4,7 +4,7 @@ const upload = require('express-fileupload')
 const mammoth = require('mammoth')
 const WordExtractor = require('word-extractor')
 const extractor = new WordExtractor()
-const htmlDocx = require('html-docx-js')
+const HTMLtoDOCX = require('html-to-docx')
 const fs = require('fs')
 const File = require('../models/File')
 
@@ -81,7 +81,7 @@ router.get('/download/:id', findFile, async (req, res) => {
         let filePath = path.join(tempDirectory, name)
         switch (res.file.textType) {
             case 'html':
-                let blob = htmlDocx.asBlob(res.file.translatedContent) // convert html to blob
+                let blob = await HTMLtoDOCX(res.file.translatedContent)
                 fs.writeFileSync(filePath, blob)
                 break 
 
