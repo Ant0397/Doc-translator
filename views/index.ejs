@@ -21,14 +21,19 @@
             </select>
             <button type="button" disabled class="item" id="translate">Translate</button>
         </div>
-        <div class="recents">
-            <% for (const file of files) { %>   
-                <div id="<%= file.id %>" class="wrapper">
-                    <i class="fas fa-file-word fa-7x"></i>
-                    <p> <%=`${file.filename}.${file.ext} (${file.targetLang})` %></p>
+        <% if (files.length > 0) { %>
+            <div class="recents-container">
+                <h2>Recents</h2>
+                <div class="recents">
+                    <% for (const file of files) { %>   
+                        <div id="<%= file.id %>" class="wrapper">
+                            <i class="fas fa-file-word fa-7x"></i>
+                            <p> <%=`${file.filename}.${file.ext} (${file.targetLang})` %></p>
+                        </div>
+                    <% } %>
                 </div>
-            <% } %>
-        </div>
+            </div>
+        <% } %>
     </div>
 </body>
 </html>

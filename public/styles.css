@@ -138,7 +138,7 @@ h2 {
     display: flex;
     justify-content: space-evenly;
     flex-wrap: wrap;
-    margin-top: 10vh;
+    margin-top: 3vh;
 }
 
 .wrapper {
@@ -170,4 +170,8 @@ i {
 p {
     margin: 1vh;
     text-align: center;
+}
+
+.recents-container {
+    margin-top: 10vh;
 }
