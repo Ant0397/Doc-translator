@@ -22,7 +22,6 @@ const clearInProgress = async () => { // removes files from DB that did not comp
         for (const file of files) {
             if (file.translatedContent == null) {
                 file.remove()
-                console.log('removed')
             }
         }
     } catch (e) {
