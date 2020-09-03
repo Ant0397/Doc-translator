@@ -16,21 +16,19 @@ const connectDB = async () => {
     }
 }
 
-const clearInProgress = () => { // removes files from DB that did not complete full translation process 
+const clearInProgress = async () => { // removes files from DB that did not complete full translation process 
     try {
-        const db = mongoose.connection
-        db.once('open', async () => {
-            const files = await File.find()
-            for (const file of files ) {
-                if (file.translatedContent == null) {
-                    file.remove()
-                }
+        let files = await File.find()
+        for (const file of files) {
+            if (file.translatedContent == null) {
+                file.remove()
+                console.log('removed')
             }
-        })
+        }
     } catch (e) {
         console.error(e)
         process.exit(1)
-    }
+    }       
 }
 
 exports.connectDB = connectDB

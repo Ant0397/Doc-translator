@@ -1,10 +1,12 @@
 const router = require('express').Router()
 const File = require('../models/File')
+const db = require('../config/db')
 const findFile = require('./file').findFile
 
 // GET index
 router.get('/', async (req, res) => {
-    let files = await File.find()
+    await db.clearInProgress()
+    const files = await File.find()
     res.render('index', { files: files })
 })
 

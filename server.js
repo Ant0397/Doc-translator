@@ -17,12 +17,11 @@ app.set('view engine', 'ejs')
 // server setup
 const PORT = process.env.PORT || 4000
 http.createServer(app).listen(PORT, () => {
-    console.log(`Server Running in ${process.env.NODE_ENV} on port: ${PORT}`)
+    console.log(`Server running in ${process.env.NODE_ENV} on port: ${PORT}`)
 })
 
 // DB
 db.connectDB()
-db.clearInProgress()
 
 // routes
 const pagesRouter = require('./routes/pages')
