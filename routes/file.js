@@ -99,8 +99,13 @@ router.get('/download/:id', findFile, async (req, res) => {
     }
 })
 
+router.get('/delete/:id', findFile, (req, res) => {
+    res.file.delete()
+    res.sendStatus(200)
+})
+
 // GET file content
-router.get('/content/:id', findFile, async (req, res) => {
+router.get('/content/:id', findFile, (req, res) => {
     res.json(res.file)
 })
 

@@ -4,6 +4,7 @@ const uploadFileBtn = document.getElementById('upload-file')
 const langSelect = document.getElementById('language-select')
 const translateBtn = document.getElementById('translate')
 const recentDocs = document.querySelectorAll('.wrapper')
+const deleteBtns = document.querySelectorAll('.fa-times-circle')
 const supportedFiles = ['application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'] // mimetypes
 
 populateDropdown()  
@@ -26,8 +27,15 @@ translateBtn.addEventListener('click', (e) => {
 
 recentDocs.forEach(doc => {
     doc.addEventListener('click', () => {
-        sessionStorage.setItem('fileId', doc.id)
-        window.location.href = '/translation/' + doc.id
+        sessionStorage.setItem('fileId', doc.parentElement.id)
+        window.location.href = '/translation/' + doc.parentElement.id
+    })
+})
+
+deleteBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        window.location.href = '/file/delete/' + btn.parentElement.id
+        window.location.reload()
     })
 })
 
