@@ -48,11 +48,11 @@ router.post('/translate', findFile, async (req, res) => {
 
     axios({
         method: 'POST',
-        url: 'https://microsoft-azure-microsoft-text-translation-3-0-v1.p.rapidapi.com/translate',
+        url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
         headers: {
             'content-type': 'application/json',
             'accept': 'application/json',
-            'x-rapidapi-host': 'microsoft-azure-microsoft-text-translation-3-0-v1.p.rapidapi.com',
+            'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
             'x-rapidapi-key': process.env.RAPID_API_KEY,
         }, params: {
             'textType': res.file.textType,

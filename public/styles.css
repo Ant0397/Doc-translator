@@ -82,8 +82,6 @@ h2 {
     text-align: center;
     font-size: 4vh;
     margin-top: 2vh;
-    margin-bottom: -2vh;
-
 }
 
 .left .document {
@@ -149,7 +147,6 @@ h2 {
     height: auto;
     padding: 10px;
     overflow-wrap: break-word;
-    margin: 1vh;
 }
 
 .wrapper:hover {
@@ -164,7 +161,7 @@ h2 {
 }
 
 i {
-    margin: 1vh;
+    margin: 2px;
 }
 
 p {
@@ -174,4 +171,10 @@ p {
 
 .recents-container {
     margin-top: 10vh;
+}
+
+.fa-times-circle:hover {
+    background-color: rgba(241, 90, 90, 0.623);
+    border-radius: 50%;
+    cursor: pointer;
 }
