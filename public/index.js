@@ -33,8 +33,8 @@ recentDocs.forEach(doc => {
 })
 
 deleteBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-        window.location.href = '/file/delete/' + btn.parentElement.id
+    btn.addEventListener('click', async () => {
+        await fetch('/dile/delete/' + btn.parentElement.id)
         window.location.reload()
     })
 })
