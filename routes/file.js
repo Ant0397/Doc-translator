@@ -77,7 +77,7 @@ router.post('/upload', async (req, res) => {
 // GET create document and download
 router.get('/download/:id', findFile, async (req, res) => {
         let name = `${res.file.filename} (${res.file.targetLang}).${res.file.ext}`
-        let filePath = path.join(tempDirectory, name)
+        let filePath = name
         console.log(res.file.textType)
         switch (res.file.textType) {
             case 'html':
