@@ -112,6 +112,7 @@ async function handleEvent(event) // switch statement to handle user input depen
             if (selectedOption.value == 'default') { // if no option selected
                 titleElement.innerText = 'Please select a language before continuing'
             } else {
+                titleElement.innerText = 'Please wait...'
                 await translate(langSelect.value, langSelect.selectedOptions[0].innerText.split(' ')[0])
                 window.location.href = '/translation/' + sessionStorage.getItem('fileId')
             }

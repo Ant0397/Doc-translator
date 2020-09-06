@@ -5,6 +5,10 @@ const originalDocument = document.getElementById('original')
 const translatedDocument = document.getElementById('translation')
 const sticky = navElement.offsetTop
 
+if (translatedDocument.innerHTML == '') {
+    window.location.reload()
+}
+
 // sticky nav
 window.onscroll = () => {
     if (window.pageYOffset > sticky) {
