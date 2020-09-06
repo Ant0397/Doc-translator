@@ -76,15 +76,13 @@ router.post('/upload', async (req, res) => {
 
 // GET create document and download
 router.get('/download/:id', findFile, async (req, res) => {
+    try {
         let name = `${res.file.filename} (${res.file.targetLang}).${res.file.ext}`
-        let filePath = name
-        console.log(res.file.textType)
+        let filePath = path.join(tempDirectory, name)
         switch (res.file.textType) {
             case 'html':
                 let blob = await HTMLtoDOCX(res.file.translatedContent)
-                console.log('blob')
                 fs.writeFileSync(filePath, blob)
-                console.log('created')
                 break 
 
             case 'plain':
@@ -95,7 +93,10 @@ router.get('/download/:id', findFile, async (req, res) => {
 
         setTimeout(() => {
             fs.unlinkSync(filePath) // clear /tmp directory
-        }, 5000)
+        }, 500)
+    } catch (e) {
+        res.end(e)
+    }
 })
 
 router.get('/delete/:id', findFile, (req, res) => {
