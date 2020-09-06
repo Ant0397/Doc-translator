@@ -76,7 +76,6 @@ router.post('/upload', async (req, res) => {
 
 // GET create document and download
 router.get('/download/:id', findFile, async (req, res) => {
-    try {
         let name = `${res.file.filename} (${res.file.targetLang}).${res.file.ext}`
         let filePath = path.join(tempDirectory, name)
         switch (res.file.textType) {
@@ -89,17 +88,11 @@ router.get('/download/:id', findFile, async (req, res) => {
                 fs.writeFileSync(filePath, res.file.translatedContent)
         }
         
-        try {
-            res.download(filePath)
-            setTimeout(() => {
-                fs.unlinkSync(filePath) // clear /tmp directory
-            }, 500)
-        } catch (e) {
-            res.end(e)
-        }
-    } catch (e) {
-        res.end(e)
-    }
+        res.download(filePath)
+
+        setTimeout(() => {
+            fs.unlinkSync(filePath) // clear /tmp directory
+        }, 500)
 })
 
 router.get('/delete/:id', findFile, (req, res) => {
