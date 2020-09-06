@@ -92,7 +92,7 @@ router.get('/download/:id', findFile, async (req, res) => {
 
         setTimeout(() => {
             fs.unlinkSync(filePath) // clear /tmp directory
-        }, 500)
+        }, 5000)
 })
 
 router.get('/delete/:id', findFile, (req, res) => {
