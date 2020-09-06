@@ -45,7 +45,7 @@ router.get('/get-languages', (req, res) => {
 
 // POST translate
 router.post('/translate', findFile, async (req, res) => {
-
+    if (res.file.content)
     axios({
         method: 'POST',
         url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
@@ -73,6 +73,10 @@ router.post('/translate', findFile, async (req, res) => {
     }).catch(e => {
         console.log(e.response)
     })
+})
+
+router.get('/test/:id', findFile, (req, res) => {
+    console.log(res.file.content.length)
 })
 
 module.exports = router

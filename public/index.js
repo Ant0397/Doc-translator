@@ -50,10 +50,10 @@ async function uploadFile(file)
         body: formData
     })
 
-    let fileId = await response.json()
+    let json = await response.json()
 
     return {
-        'fileId': fileId,
+        'message': json.message,
         'status': response.status
     }
 }
@@ -83,19 +83,17 @@ async function handleEvent(event) // switch statement to handle user input depen
                 return
             } else {
                 let upload = await uploadFile(event.target.files[0])
-                if (upload.status == 500) { // if file was not uploaded
-                    titleElement.innerText = 'Error uploading. Please try again'
-                    return
-                } else if (upload.status == 415) {
-                    titleElement.innerText = 'Please ensure your file does not contain images'
+                if (upload.status == 500 || upload.status == 415) { // if error
+                    titleElement.innerText = upload.message
                     return
                 } else { // proceed
+                    console.log(upload.message)
                     disableElement(uploadFileBtn)
                     enableElement(langSelect)
                     enableElement(translateBtn)
                     uploadFileBtn.innerText = 'File Uploaded'
                     titleElement.innerText = 'Select the language you want to translate to'
-                    sessionStorage.setItem('fileId', upload.fileId)
+                    sessionStorage.setItem('fileId', upload.message) // message is id of file 
                     return
                 }
             }

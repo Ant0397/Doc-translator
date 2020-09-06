@@ -40,7 +40,7 @@ router.post('/upload', async (req, res) => {
                     return {
                         'filename': req.files.file.name.split('.')[0],
                         'ext': req.files.file.name.split('.')[1],
-                        'content': data.value,
+                        'content': getContent(data.value),
                         'textType': 'html'
                     }
                 })
@@ -51,7 +51,7 @@ router.post('/upload', async (req, res) => {
                     return {
                         'filename': req.files.file.name.split('.')[0],
                         'ext': req.files.file.name.split('.')[1],
-                        'content': data.getBody(),
+                        'content': getContent(data.getBody()),
                         'textType': 'plain',
                     }
                 })
@@ -60,13 +60,23 @@ router.post('/upload', async (req, res) => {
 
         fs.unlinkSync(req.files.file.tempFilePath) // delete temp file
 
-        if (fileContent.content.includes('<img')) { // return unsupported media status code
-            res.sendStatus(415)
-        } else { // save to DB
+        let containsImages
+        for (let chunk of fileContent.content) {
+            if (chunk.includes('<img')) { 
+                containsImages = true
+                break
+            }
+        }
+
+
+        if (containsImages) { // return unsupported media status code
+            res.status(415).json({ message: 'Please ensure your file does not contain images' })
+        } else {
+            // save to DB
             let file = new File(fileContent)
             try {
                 file.save()
-                res.status(201).json(file.id)
+                res.status(201).json({ message: file.id })
             } catch (e) {
                 res.status(500).json({ message: e.message })
             }
@@ -109,6 +119,15 @@ router.get('/content/:id', findFile, (req, res) => {
     res.json(res.file)
 })
 
+
+function getContent(value) // separates file content into chunks of 5000 characters (API request limit)
+{
+    if (value.length < 4999) {
+        return [value]
+    } else {
+        return value.match(new RegExp('.{1,' + 4999 + '}', 'g'))
+    }
+}
 
 exports.router = router
 exports.findFile = findFile
