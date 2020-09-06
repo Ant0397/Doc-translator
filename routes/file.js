@@ -89,11 +89,14 @@ router.get('/download/:id', findFile, async (req, res) => {
                 fs.writeFileSync(filePath, res.file.translatedContent)
         }
         
-        res.download(filePath)
-
-        setTimeout(() => {
-            fs.unlinkSync(filePath) // clear /tmp directory
-        }, 500)
+        try {
+            res.download(filePath)
+            setTimeout(() => {
+                fs.unlinkSync(filePath) // clear /tmp directory
+            }, 500)
+        } catch (e) {
+            res.end(e)
+        }
     } catch (e) {
         res.end(e)
     }
