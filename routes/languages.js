@@ -45,8 +45,28 @@ router.get('/get-languages', (req, res) => {
 
 // POST translate
 router.post('/translate', findFile, async (req, res) => {
+    let chunkedContent = chunkContent(res.file.content)
+    let translatedChunks = []
 
-    axios({
+    for (let chunk of chunkedContent) {
+        let translatedChunk = await translateChunk(chunk, req.body.language, res.file.textType)
+        translatedChunks.push(translatedChunk)
+    }
+    
+    try {
+        res.file.targetLang = req.body.nativeName
+        res.file.translatedContent = translatedChunks.join()
+        res.file.save()
+        res.sendStatus(200)
+    } catch (e) {
+        res.status(500).json({ message: e.message })
+    }
+})
+
+
+async function translateChunk(chunk, language, textType) 
+{
+    return await axios({
         method: 'POST',
         url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
         headers: {
@@ -55,24 +75,27 @@ router.post('/translate', findFile, async (req, res) => {
             'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
             'x-rapidapi-key': process.env.RAPID_API_KEY,
         }, params: {
-            'textType': res.file.textType,
-            'to': req.body.language,        
+            'textType': textType,
+            'to': language,        
             'api-version': '3.0'
         }, data: [{
-            'Text': res.file.content
+            'Text': chunk
         }]
     }).then(data => {
-        try {
-            res.file.targetLang = req.body.nativeName
-            res.file.translatedContent = data.data[0].translations[0].text
-            res.file.save()
-            res.sendStatus(200)
-        } catch (e) {
-            res.status(500).json({ message: e.message })
-        }
+        return data.data[0].translations[0].text
     }).catch(e => {
         console.log(e.response)
     })
-})
+}
+
+function chunkContent(value) // separates file content into chunks of 5000 characters (API request limit)
+{
+    if (value.length < 4999) {
+        return [value]
+    } else {
+        return value.match(new RegExp('.{1,' + 4999 + '}', 'g'))
+    }
+}
+
 
 module.exports = router
