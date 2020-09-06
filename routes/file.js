@@ -82,6 +82,7 @@ router.get('/download/:id', findFile, async (req, res) => {
         switch (res.file.textType) {
             case 'html':
                 let blob = await HTMLtoDOCX(res.file.translatedContent)
+                console.log('blob')
                 fs.writeFileSync(filePath, blob)
                 console.log('created')
                 break 
