@@ -1,11 +1,19 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FileContext } from '../../context/FileContext'
+import FileService from '../../services/FileService'
 
 export default function FormInput({ disabledByDefault, type, defaultValue }) {
     const [isDisabled, setIsDisabled] = useState(disabledByDefault)
     const [value, setValue] = useState(defaultValue)
 
     const [file, setFile, supportedFiles, setSupportedFiles, instruction, setInstruction] = useContext(FileContext)
+
+    useEffect(() => {
+        switch (type) {
+            case 'select':
+                file ? setIsDisabled(false) : null 
+        }
+    })
 
     function eventHandle(e) {
         switch (e.target.id) {
@@ -15,7 +23,14 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
 
             case 'file-hidden':
                 if (!supportedFiles.includes(e.target.files[0].type)) return setInstruction('File Type Unsupported')
-                // FileService - upload file 
+
+                FileService.upload(e.target.files[0])
+                    .then(data => {
+                        data.id ? setFile(data.id) : null 
+                        setInstruction(data.message)
+                        setValue('File Uploaded')
+                        setIsDisabled(true)
+                    })
         }
     }
 
@@ -30,9 +45,12 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
 
         case 'select':
             return (
-                <select className="my-2 form-item" disabled={isDisabled}>
-                    <option selected>{value}</option>
-                </select>
+                <div>
+                    <select className="my-2 form-item" disabled={isDisabled}>
+                        <option selected>{value}</option>
+                    
+                    </select>
+                </div>
             )
 
         case 'submit':

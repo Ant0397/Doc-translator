@@ -1,77 +1,45 @@
+// modules
 const router = require('express').Router()
 const path = require('path')
 const upload = require('express-fileupload')
-const mammoth = require('mammoth')
-const WordExtractor = require('word-extractor')
-const extractor = new WordExtractor()
 const HTMLtoDOCX = require('html-to-docx')
 const fs = require('fs')
 const File = require('../models/File')
+const { findFile, extract } = require('../middleware')
 
-// middleware
+// directory 
 const tempDirectory = path.join(__dirname, '../', 'tmp')
 router.use(upload({
     useTempFiles: true,
     tempFileDir: tempDirectory
 }))
 
-const findFile = async (req, res, next) => {
-    let id = req.params.id || req.body.fileId
-    let file = await File.findById(id)
 
-    if (!file) {
-        res.status(404).json('File not found')
-    } else {
-        res.file = file
-        next()
-    }
-}
-
-// POST extract file content and upload to DB
+// @method POST 
+// @route /api/file/upload
+// @desc extract file content and upload to DB
+// @access public
 router.post('/upload', async (req, res) => {
-    if (fs.readdirSync(tempDirectory).length == 0) { // if upload failed, abort
-        res.sendStatus(500)
-    } else {
-        let fileContent
-        switch (req.files.file.mimetype) {
+    // if upload failed, abort
+    if (fs.readdirSync(tempDirectory).length == 0) return res.status(500).json({ message: 'Upload Failed, Please Try Again' })
+    
+    // extract content
+    let { file } = req.files
+    let fileContent = await extract(file)
+    
+    // delete temp file
+    fs.unlinkSync(file.tempFilePath) 
 
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                fileContent = await mammoth.convertToHtml({path: req.files.file.tempFilePath}).then(data => { // use mammoth to convert .docx to HTML
-                    return {
-                        'filename': req.files.file.name.split('.')[0],
-                        'ext': req.files.file.name.split('.')[1],
-                        'content': data.value,
-                        'textType': 'html'
-                    }
-                })
-                break
+    // return unsupported media status code
+    if (fileContent.content.includes('<img')) return res.status(415).json({ message: 'Please Ensure Your File Does Not Contain Images' })
 
-            case 'application/msword':
-                fileContent = await extractor.extract(req.files.file.tempFilePath).then(data => { // use extractor to rip .doc content
-                    return {
-                        'filename': req.files.file.name.split('.')[0],
-                        'ext': req.files.file.name.split('.')[1],
-                        'content': data.getBody(),
-                        'textType': 'plain',
-                    }
-                })
-                break
-        }
-
-        fs.unlinkSync(req.files.file.tempFilePath) // delete temp file
-
-        if (fileContent.content.includes('<img')) { // return unsupported media status code
-            res.status(415).json({ message: 'Please ensure your file does not contain images' })
-        } else {
-            // save to DB
-            let file = new File(fileContent)
-            try {
-                file.save()
-                res.status(201).json({ message: file.id })
-            } catch (e) {
-                res.status(500).json({ message: e.message })
-            }
-        }
+    // save to DB
+    let newFile = new File(fileContent)
+    try {
+        await newFile.save()
+        return res.status(201).json({ id: newFile.id, message: 'Select Target Language' })
+    } catch (e) {
+        return res.status(500).json({ message: e.message })
     }
 })
 

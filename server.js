@@ -23,11 +23,8 @@ http.createServer(app).listen(PORT, () => {
 db.connectDB()
 
 // routes
-// const pagesRouter = require('./routes/pages')
-// app.use('/', pagesRouter)
+const fileRouter = require('./routes/file').router
+app.use('/api/file', fileRouter)
 
-// const fileRouter = require('./routes/file').router
-// app.use('/file', fileRouter)
-
-// const languagesRouter = require('./routes/languages')
-// app.use('/languages', languagesRouter)
+const languagesRouter = require('./routes/languages')
+app.use('/api/languages', languagesRouter)

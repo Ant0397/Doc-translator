@@ -2,8 +2,11 @@ const router = require('express').Router()
 const axios = require('axios')
 const findFile = require('./file').findFile
 
-// GET languages
-router.get('/get-languages', (req, res) => {
+// @method GET
+// @route /api/languages
+// @desc retrieves supported lagnguages
+// @acces public
+router.get('/', (req, res) => {
 
     // axios({
     //     method: 'GET',
