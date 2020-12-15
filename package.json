@@ -4,8 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "devStart": "NODE_ENV=development nodemon server.js",
-    "start": "node server.js"
+    "build": "webpack",
+    "server": "NODE_ENV=dev nodemon server.js",
+    "dev": "concurrently \"npm run build\" \"npm run server\""
   },
   "repository": {
     "type": "git",
@@ -19,16 +20,31 @@
   "homepage": "https://github.com/ant0397/doc-translator#readme",
   "dependencies": {
     "axios": "^0.20.0",
+    "bootstrap": "^4.5.3",
+    "concurrently": "^5.3.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
-    "html-to-docx": "^1.1.29",
+    "html-to-docx": "^1.1.32",
     "mammoth": "^1.4.11",
     "mongoose": "^5.10.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-router-dom": "^5.2.0",
+    "reactstrap": "^8.7.1",
     "word-extractor": "^0.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.10",
+    "@babel/preset-react": "^7.12.10",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.0.1",
+    "dotenv": "^8.2.0",
+    "html-webpack-plugin": "^4.5.0",
     "nodemon": "^2.0.4",
-    "dotenv": "^8.2.0"
+    "style-loader": "^2.0.0",
+    "webpack": "^5.10.1",
+    "webpack-cli": "^4.2.0"
   }
 }

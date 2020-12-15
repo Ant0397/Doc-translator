@@ -15,15 +15,15 @@ router.use(upload({
     tempFileDir: tempDirectory
 }))
 
-const findFile = async (req, res, done) => {
+const findFile = async (req, res, next) => {
     let id = req.params.id || req.body.fileId
     let file = await File.findById(id)
 
-    if (! file) {
+    if (!file) {
         res.status(404).json('File not found')
     } else {
         res.file = file
-        done()
+        next()
     }
 }
 
