@@ -21,6 +21,7 @@ http.createServer(app).listen(PORT, () => {
 
 // DB
 db.connectDB()
+db.clearInProgress()
 
 // routes
 const fileRouter = require('./routes/file').router

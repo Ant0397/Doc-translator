@@ -2,14 +2,14 @@ const File = require('./models/File')
 const mammoth = require('mammoth')
 const WordExtractor = require('word-extractor')
 const extractor = new WordExtractor()
+const axios = require('axios')
 
 const findFile = async (req, res, next) => {
     let id = req.params.id || req.body.fileId
     let file = await File.findById(id)
-
     if (!file) return res.status(404).json('File not found')
     
-    res.file = file
+    req.file = file
     next()
 }
 
@@ -39,5 +39,39 @@ const extract = async (file) => {
     }
 }
 
+const translateChunk = (chunk, language, textType) => {
+    return axios({
+        method: 'POST',
+        url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
+        headers: {
+            'content-type': 'application/json',
+            'accept': 'application/json',
+            'x-rapidapi-host': 'microsoft-azure-microsoft-text-translation-3-0-v1.p.rapidapi.com',
+            'x-rapidapi-key': process.env.RAPID_API_KEY,
+        }, params: {
+            'textType': textType,
+            'to': language,        
+            'api-version': '3.0'
+        }, data: [{
+            'Text': chunk
+        }]
+    }).then(data => {
+        return data.data[0].translations[0].text
+    }).catch(e => {
+        console.log(e.response)
+    })
+}
+
+const chunkContent = (value) => { // separates file content into chunks of 5000 characters (API request limit)
+    if (value.length < 4999) {
+        return [value]
+    } else {
+        return value.match(new RegExp('.{1,' + 4999 + '}', 'g'))
+    }
+} 
+
+
 exports.findFile = findFile
 exports.extract = extract
+exports.translateChunk = translateChunk
+exports.chunkContent = chunkContent

@@ -37,7 +37,7 @@ router.post('/upload', async (req, res) => {
     let newFile = new File(fileContent)
     try {
         await newFile.save()
-        return res.status(201).json({ id: newFile.id, message: 'Select Target Language' })
+        return res.status(201).json({ id: newFile._id, message: 'Select Target Language' })
     } catch (e) {
         return res.status(500).json({ message: e.message })
     }

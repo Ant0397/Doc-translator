@@ -10,7 +10,15 @@ module.exports = {
                     isoCodes
                 ]
             })
-    }
+    },
 
-    // translate
+    translate: (fileId, targetLang) => {
+        return fetch('/api/languages/translate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'Application/Json'
+            },
+            body: JSON.stringify({ fileId, targetLang })
+        })
+    }
 }

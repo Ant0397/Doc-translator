@@ -48,10 +48,6 @@
     background-color: rgb(96, 133, 167);
 }
 
-input[type=submit] {
-    background-color: transparent;
-}
-
 input[type=submit]:hover {
     background-color: rgb(11, 53, 73);
     color: white;
