@@ -1,4 +1,5 @@
 import React from 'react'
+import { LanguageProvider } from '../../context/LanguageContext'
 import FormInput from './FormInput'
 
 export default function CustomForm() {

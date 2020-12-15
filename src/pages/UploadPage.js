@@ -2,6 +2,7 @@ import React from 'react'
 import CustomForm from '../components/form/CustomForm'
 import Header from '../components/Header'
 import { FileProvider } from '../context/FileContext'
+import { LanguageProvider } from '../context/LanguageContext'
 
 export default function UploadPage() {
 
@@ -9,7 +10,9 @@ export default function UploadPage() {
         <div className="page">
             <FileProvider>
                 <Header />
-                <CustomForm />
+                <LanguageProvider>
+                    <CustomForm />
+                </LanguageProvider>
             </FileProvider>
         </div>
     )

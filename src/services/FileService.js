@@ -12,4 +12,7 @@ module.exports = {
         }).then(res => res.json())
             .then(data => data)
     }
+
+    // download 
+    // delete in progress
 }

@@ -5,10 +5,12 @@ module.exports = {
             .then(data => {
                 let languages = Object.values(data)
                 let isoCodes = Object.keys(data)
-                return {
+                return [    
                     languages,
                     isoCodes
-                }
+                ]
             })
     }
+
+    // translate
 }
