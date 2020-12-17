@@ -20,24 +20,32 @@ export default function TranslationPage() {
 
     let history = useHistory()
 
+    // use id saved in state to return file contents from DB
     useEffect(() => {
         if (!sessionStorage.getItem('fileId')) return history.push('/')
-        setInstruction('Your Document Is Ready')
-        FileService.getFile(sessionStorage.getItem('fileId'))
-            .then(data => {
-                setContent(data.original)
-                setTranslatedContent(data.translated)
-                setLanguage(data.language)
+        if (!fileId) setFileId(sessionStorage.getItem('fileId'))
+
+        FileService.getFile(fileId)
+            .then(res => {
+                if (res.status == 200) {
+                    res.json()
+                        .then(data => {
+                            setContent(data.content)
+                            setTranslatedContent(data.translatedContent)
+                            setLanguage(data.targetLangName)
+                            setInstruction('Your Document Is Ready')
+                        })
+                } else {
+                    res.json()
+                        .then(data => setInstruction(data.message))
+                }
             })
-        
-    }, [])
+    })
 
     return (
         <div className="page">
             <Header />
-            {/* add justify center on overlay, not sticky */}
             <Container id="nav-container" fluid>
-                {/* Make transparent on overlay */}
                 <Nav />
             </Container>
             <Container fluid>

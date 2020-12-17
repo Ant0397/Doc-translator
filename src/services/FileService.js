@@ -15,10 +15,12 @@ module.exports = {
 
     getFile: (fileId) => {
         return fetch(`/api/file/${fileId}`)
-            .then(res => res.json())
-            .then(data => data)
+            .then(res => res)
+    },
+ 
+    download: (fileId) => {
+        return fetch(`/api/file/download/${fileId}`)
+            .then(res => res)
     }
-
-    // download 
     // delete in progress
 }

@@ -6,11 +6,15 @@ const axios = require('axios')
 
 const findFile = async (req, res, next) => {
     let id = req.params.id || req.body.fileId
-    let file = await File.findById(id)
-    if (!file) return res.status(404).json({ message: 'File Not Found' })
-    
-    req.file = file
-    next()
+    try {
+        let file = await File.findById(id)
+        if (!file) return res.status(404).json({ message: 'File Not Found' })
+        
+        req.file = file
+        next()
+    } catch (e) {
+        return res.status(500).json({ message: e.message })
+    }
 }
 
 const extract = async (file) => {

@@ -25,7 +25,12 @@ router.post('/upload', async (req, res) => {
     
     // extract content
     let { file } = req.files
-    let fileContent = await extract(file)
+    let fileContent
+    try {
+        fileContent = await extract(file)
+    } catch (e) {
+        return res.status(500).json({ message: e.message })
+    }
     
     // delete temp file
     fs.unlinkSync(file.tempFilePath) 
@@ -48,35 +53,44 @@ router.post('/upload', async (req, res) => {
 // @desc get original and translated content 
 // @access public
 router.get('/:id', findFile, (req, res) => {
-    res.status(200).json({
-        original: req.file.content,
-        translated: req.file.translatedContent,
-        language: req.file.targetLangName
+    let { content, translatedContent, targetLangName } = req.file
+    return res.status(200).json({
+        content,
+        translatedContent,
+        targetLangName
     })
 })
 
-// GET create document and download
+// @method GET
+// @route /api/file/download/:id
+// @desc create word document and download
+// @acces public
 router.get('/download/:id', findFile, async (req, res) => {
+    let { filename, targetLangName, ext, textType, translatedContent } = req.file
+
     try {
-        let name = `${res.file.filename} (${res.file.targetLang}).${res.file.ext}`
+        let name = `${filename} (${targetLangName}).${ext}`
         let filePath = path.join(tempDirectory, name)
-        switch (res.file.textType) {
+        
+        // create file and write to dir
+        switch (textType) {
             case 'html':
-                let blob = await HTMLtoDOCX(res.file.translatedContent)
+                let blob = await HTMLtoDOCX(translatedContent)
                 fs.writeFileSync(filePath, blob)
                 break 
 
             case 'plain':
-                fs.writeFileSync(filePath, res.file.translatedContent)
+                fs.writeFileSync(filePath, translatedContent)
         }
         
-        res.download(filePath)
+        return res.download(filePath)
 
+        // clear /tmp directory 
         setTimeout(() => {
-            fs.unlinkSync(filePath) // clear /tmp directory
+            fs.unlinkSync(filePath)
         }, 500)
     } catch (e) {
-        res.end(e)
+        return res.status(500).json({ message: e.message })
     }
 })
 

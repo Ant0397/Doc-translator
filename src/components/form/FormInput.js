@@ -59,9 +59,9 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                     setTargetLanguageCode(null)
                     setTargetLanguageName(null)
                 } else {
+                    setInstruction(`Your Document Will Be Translated Into ${selected.innerText}`)
                     setTargetLanguageCode(e.target.value)
                     setTargetLanguageName(selected.innerText)
-                    setInstruction(`Your Document Will Be Translated Into ${selected.innerText}`)
                 }
         }
     }
