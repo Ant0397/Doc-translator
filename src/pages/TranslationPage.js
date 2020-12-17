@@ -4,8 +4,8 @@ import Doc from '../components/Doc'
 import Header from '../components/Header'
 import Nav from '../components/Nav'
 import { FileContext } from '../context/FileContext'
-import { LanguageContext } from '../context/LanguageContext'
 import FileService from '../services/FileService'
+import { Container, Col, Row } from 'reactstrap'
 
 export default function TranslationPage() {
     const [
@@ -32,25 +32,32 @@ export default function TranslationPage() {
         
     }, [])
 
-
-
     return (
         <div className="page">
             <Header />
-            <Nav />
-            <div class="document-container">
-                { content ?
-                    <Doc position="left" title="Original" id="original" content={content} />    
-                :
-                    null
-                }
-
-                { translatedContent ?
-                    <Doc position="right" title={`Translation ${language}`} id="translation" content={translatedContent} />
-                :
-                    null 
-                }
-            </div>
+            {/* add justify center on overlay, not sticky */}
+            <Container id="nav-container" fluid>
+                {/* Make transparent on overlay */}
+                <Nav />
+            </Container>
+            <Container fluid>
+                <Row>
+                    <Col className="d-flex justify-content-center" md="6">
+                        { content ?
+                            <Doc position="left" title="Original" id="original" content={content} />    
+                        :
+                            null
+                        }
+                    </Col>
+                    <Col className="d-flex justify-content-center" md="6">
+                        { translatedContent ?
+                            <Doc position="right" title={`Translation ${language}`} id="translation" content={translatedContent} />
+                        :
+                            null 
+                        }
+                    </Col>
+                </Row>
+            </Container>
         </div>
     )
 }

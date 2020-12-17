@@ -55,59 +55,22 @@ input[type=submit]:hover {
     border: 1px solid rgb(110, 110, 110)
 }
 
-@media only screen and (max-width: 600px) {
-    .form-item {
-      width: 300px;
-    }
-  }
-
-@media only screen and (max-width: 300px) {
-    .form-item {
-      width: 200px;
-    }
-  }
-
-
-.document-container {
-    max-width: 100vw;
-    display: flex;
-    justify-content: space-between;
-}
-
 .document {
-    padding: 2vw;
-    margin-top: 2vw;
     background-color: white;
-    height: auto;
-    width: 48vw;
     color: rgb(11, 53, 73);
     border: 3px solid rgb(11, 53, 73);
 }
 
 h2 {
     text-align: center;
-    font-size: 4vh;
     color: rgb(11, 53, 73);
-}
-
-.left .document {
-    margin-left: .5vw;
-}
-
-.right .document {
-    margin-right: .5vw;
-}
-
-.nav {
-    display: flex;
-    justify-content: center;
 }
 
 .nav-item {
     border: 2px solid rgb(11, 53, 73);
     border-top: none;
-    margin-top: -.1vh;
     border-radius: 0px;
+    height: 70px;
 }
 
 .nav-item.left {
@@ -124,19 +87,45 @@ h2 {
 
 .sticky {
     top: 0;
+    width: 90%;
     position: fixed;
-    width: 100%;
+    z-index: 1;
 }
 
 .sticky .nav-item.left {
-    margin-right: 1vw;
+    margin-right: 15px;
     border-right: 2px solid rgb(11, 53, 73);
 }
 
 .sticky .nav-item.right {
-    margin-left: 1vw;
+    margin-left: 15px;
     border-left: 2px solid rgb(11, 53, 73);
 }   
+
+@media only screen and (max-width: 767px) {
+    .sticky .nav-item.left {
+        margin-right: 0;
+        border-right: none;
+    }
+    
+    .sticky .nav-item.right {
+        margin-left: 0;
+        border-left: none;
+    }   
+}
+
+@media only screen and (max-width: 600px) {
+    .nav-item {
+      width: 300px;
+    }
+}
+
+@media only screen and (max-width: 300px) {
+    .nav-item {
+      width: 200px;
+    }
+}
+
 /*
 .recents {
     display: flex;
