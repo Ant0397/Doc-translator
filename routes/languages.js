@@ -46,23 +46,28 @@ router.get('/', (req, res) => {
     res.json(languages)
 })
 
-// POST translate
+// @method POST 
+// @route /api/languages/translate
+// @desc translate file content and save to DB
+// @access public
 router.post('/translate', findFile, async (req, res) => {
     let chunkedContent = chunkContent(req.file.content)
     let translatedChunks = []
-    
-    for (let chunk of chunkedContent) {
-        let translatedChunk = await translateChunk(chunk, req.body.targetLang, req.file.textType)
-        translatedChunks.push(translatedChunk)
-    }
 
     try {
-        req.file.targetLang = req.body.targetLang
+        for (let chunk of chunkedContent) {
+            let translatedChunk = await translateChunk(chunk, req.body.targetLangCode, req.file.textType)
+            translatedChunks.push(translatedChunk)
+        }
+
+        req.file.targetLangCode = req.body.targetLangCode
+        req.file.targetLangName = req.body.targetLangName.split(' ')[1]
         req.file.translatedContent = translatedChunks.join()
-        req.file.save()
-        res.sendStatus(200)
+
+        await req.file.save()
+        return res.sendStatus(200)
     } catch (e) {
-        res.status(500).json({ message: e.message })
+        return res.status(500).json({ message: e.message })
     }
 })
 

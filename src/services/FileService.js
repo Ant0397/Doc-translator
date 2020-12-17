@@ -11,6 +11,12 @@ module.exports = {
             body: formData
         }).then(res => res.json())
             .then(data => data)
+    },
+
+    getFile: (fileId) => {
+        return fetch(`/api/file/${fileId}`)
+            .then(res => res.json())
+            .then(data => data)
     }
 
     // download 

@@ -7,7 +7,7 @@ const axios = require('axios')
 const findFile = async (req, res, next) => {
     let id = req.params.id || req.body.fileId
     let file = await File.findById(id)
-    if (!file) return res.status(404).json('File not found')
+    if (!file) return res.status(404).json({ message: 'File Not Found' })
     
     req.file = file
     next()

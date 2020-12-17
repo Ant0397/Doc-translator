@@ -17,7 +17,11 @@ const FileSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    "targetLang": {
+    "targetLangCode": {
+        type: String,
+        default: null
+    },
+    "targetLangName": {
         type: String,
         default: null
     },

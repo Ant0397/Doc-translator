@@ -7,18 +7,27 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     const [isDisabled, setIsDisabled] = useState(disabledByDefault)
     const [value, setValue] = useState(defaultValue)
 
-    const [file, setFile, supportedFiles, setSupportedFiles, instruction, setInstruction] = useContext(FileContext)
-    const [allLanguages, setAllLanguages, targetLanguage, setTargetLanguage, isoCodes, setIsoCodes] = useContext(LanguageContext)
+    const [
+        fileId, setFileId, 
+        supportedFiles, setSupportedFiles, 
+        instruction, setInstruction
+    ] = useContext(FileContext)
+    const [
+        allLanguages, setAllLanguages, 
+        targetLanguageCode, setTargetLanguageCode, 
+        targetLanguageName, setTargetLanguageName, 
+        isoCodes, setIsoCodes
+    ] = useContext(LanguageContext)
 
     // sets input state according to journey progress 
     useEffect(() => {
         switch (type) {
             case 'select':
-                file ? setIsDisabled(false) : null 
+                fileId ? setIsDisabled(false) : setIsDisabled(true) 
                 break 
 
             case 'submit':
-                targetLanguage ? setIsDisabled(false): null 
+                targetLanguageCode && targetLanguageName ? setIsDisabled(false) : setIsDisabled(true) 
         }
     })
 
@@ -34,17 +43,26 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 if (!supportedFiles.includes(e.target.files[0].type)) return setInstruction('File Type Unsupported')
                 FileService.upload(e.target.files[0])
                     .then(data => {
-                        data.id ? setFile(data.id) : null 
+                        if (data.id) {
+                            setFileId(data.id)
+                            setValue('File Uploaded')
+                            setIsDisabled(true)
+                        }
                         setInstruction(data.message)
-                        setValue('File Uploaded')
-                        setIsDisabled(true)
                     })
                 break
 
             case 'select':
                 let selected = document.querySelector('option:checked')
-                setTargetLanguage(e.target.value)
-                setInstruction(`Your Document Will Be Translated Into ${selected.innerText}`)
+                if (selected.value == 'default') {
+                    setInstruction('Please Select A Language')
+                    setTargetLanguageCode(null)
+                    setTargetLanguageName(null)
+                } else {
+                    setTargetLanguageCode(e.target.value)
+                    setTargetLanguageName(selected.innerText)
+                    setInstruction(`Your Document Will Be Translated Into ${selected.innerText}`)
+                }
         }
     }
 
@@ -61,7 +79,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
             return (
                 <div>
                     <select onChange={eventHandle} id="select" className="my-2 form-item" disabled={isDisabled}>
-                        <option selected>{value}</option>
+                        <option value="default" selected>{value}</option>
 
                         { allLanguages && isoCodes ? 
                             allLanguages.map((language) => (

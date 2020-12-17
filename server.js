@@ -24,6 +24,9 @@ db.connectDB()
 db.clearInProgress()
 
 // routes
+const pagesRouter = require('./routes/pages')
+app.use('/', pagesRouter)
+
 const fileRouter = require('./routes/file').router
 app.use('/api/file', fileRouter)
 

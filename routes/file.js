@@ -30,7 +30,7 @@ router.post('/upload', async (req, res) => {
     // delete temp file
     fs.unlinkSync(file.tempFilePath) 
 
-    // return unsupported media status code
+    // return unsupported media status code if image tags are found
     if (fileContent.content.includes('<img')) return res.status(415).json({ message: 'Please Ensure Your File Does Not Contain Images' })
 
     // save to DB
@@ -41,6 +41,18 @@ router.post('/upload', async (req, res) => {
     } catch (e) {
         return res.status(500).json({ message: e.message })
     }
+})
+
+// @method GET
+// @route /api/file/:id
+// @desc get original and translated content 
+// @access public
+router.get('/:id', findFile, (req, res) => {
+    res.status(200).json({
+        original: req.file.content,
+        translated: req.file.translatedContent,
+        language: req.file.targetLangName
+    })
 })
 
 // GET create document and download
@@ -73,11 +85,5 @@ router.get('/delete/:id', findFile, (req, res) => {
     res.sendStatus(200)
 })
 
-// GET file content
-router.get('/content/:id', findFile, (req, res) => {
-    res.json(res.file)
-})
-
 
 exports.router = router
-exports.findFile = findFile
