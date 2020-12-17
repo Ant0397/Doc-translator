@@ -9,7 +9,7 @@ router.get('/', async (req, res) => {
     return res.sendFile(path.join(__dirname, '../', 'public', 'index.html'))
 })
 
-// @method GET
+// @method GET  
 // @route /translation
 // @desc serve index page
 // @access public

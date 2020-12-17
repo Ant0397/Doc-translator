@@ -23,9 +23,8 @@ export default function TranslationPage() {
     // use id saved in state to return file contents from DB
     useEffect(() => {
         if (!sessionStorage.getItem('fileId')) return history.push('/')
-        if (!fileId) setFileId(sessionStorage.getItem('fileId'))
 
-        FileService.getFile(fileId)
+        FileService.getFile(sessionStorage.getItem('fileId'))
             .then(res => {
                 if (res.status == 200) {
                     res.json()
@@ -33,14 +32,13 @@ export default function TranslationPage() {
                             setContent(data.content)
                             setTranslatedContent(data.translatedContent)
                             setLanguage(data.targetLangName)
-                            setInstruction('Your Document Is Ready')
                         })
                 } else {
                     res.json()
                         .then(data => setInstruction(data.message))
                 }
             })
-    })
+    }, [])
 
     return (
         <div className="page">

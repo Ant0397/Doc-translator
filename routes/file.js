@@ -62,10 +62,10 @@ router.get('/:id', findFile, (req, res) => {
 })
 
 // @method GET
-// @route /api/file/download/:id
-// @desc create word document and download
-// @acces public
-router.get('/download/:id', findFile, async (req, res) => {
+// @route /api/file/create-doc/:id
+// @desc converts html to docx and writes to directory 
+// @access public
+router.get('/create-doc/:id', findFile, async (req, res) => {
     let { filename, targetLangName, ext, textType, translatedContent } = req.file
 
     try {
@@ -82,21 +82,25 @@ router.get('/download/:id', findFile, async (req, res) => {
             case 'plain':
                 fs.writeFileSync(filePath, translatedContent)
         }
-        
-        return res.download(filePath)
 
-        // clear /tmp directory 
-        setTimeout(() => {
-            fs.unlinkSync(filePath)
-        }, 500)
+        res.status(201).json({ path: filePath })
     } catch (e) {
         return res.status(500).json({ message: e.message })
     }
 })
 
-router.get('/delete/:id', findFile, (req, res) => {
-    res.file.delete()
-    res.sendStatus(200)
+// @method GET
+// @route /api/file/download/:path
+// @desc create word document and download
+// @acces public
+router.get('/download/:path',  (req, res) => {
+        let filePath = req.params.path
+        res.download(filePath)
+
+        // clear /tmp directory 
+        setTimeout(() => {
+            fs.unlinkSync(filePath)
+        }, 500)
 })
 
 

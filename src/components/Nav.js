@@ -17,15 +17,17 @@ export default function Nav() {
     function handleEvent(e) {
         switch (e.target.id) {
             case 'reset':
-                if (fileId) setFileId(null)
                 sessionStorage.removeItem('fileId')
                 return history.push('/')
 
             case 'download':
-                FileService.download(fileId)
+                FileService.createDoc(sessionStorage.getItem('fileId'))
                     .then(res => {
-                        if (res.status == 200) {
-                            setInstruction('Your File Is Downloading')
+                        if (res.status == 201) {
+                            res.json()
+                                .then(data => {
+                                    window.location.href = `/api/file/download/${encodeURIComponent(data.path)}`
+                                })
                         } else {
                             res.json()
                                 .then(data => {
@@ -38,6 +40,8 @@ export default function Nav() {
 
     // set onscroll event to pin nav to top of page 
     useEffect(() => {
+        setInstruction('Your Document Is Ready')
+
         let navElement = document.getElementById('nav')
         let navContainerElement = document.getElementById('nav-container')
 
@@ -52,7 +56,7 @@ export default function Nav() {
                 navElement.classList.remove('sticky')
             }
         }
-    })
+    }, [])
 
     return (
         <nav id="nav" className="d-flex justify-content-center">

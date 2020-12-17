@@ -17,10 +17,11 @@ module.exports = {
         return fetch(`/api/file/${fileId}`)
             .then(res => res)
     },
- 
-    download: (fileId) => {
-        return fetch(`/api/file/download/${fileId}`)
+
+    createDoc: (fileId) => {
+        return fetch(`/api/file/create-doc/${fileId}`)
             .then(res => res)
     }
+
     // delete in progress
 }

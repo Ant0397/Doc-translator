@@ -9,12 +9,20 @@ export function LanguageProvider({ children }) {
     const [targetLanguageName, setTargetLanguageName] = useState(null)
     const [isoCodes, setIsoCodes] = useState(null)
 
+    // retrive supported languages from session storage or API call 
     useEffect(() => {
-        LanguageService.getLanguages()
-            .then(data => {
-                setAllLanguages(data[0])
-                setIsoCodes(data[1])
-            })
+        if (sessionStorage.getItem('allLanguages') && sessionStorage.getItem('isoCodes')) {
+            setAllLanguages(JSON.parse(sessionStorage.getItem('allLanguages')))
+            setIsoCodes(JSON.parse(sessionStorage.getItem('isoCodes')))
+        } else {
+            LanguageService.getLanguages()
+                .then(data => {
+                    setAllLanguages(data[0])
+                    setIsoCodes(data[1])
+                    sessionStorage.setItem('allLanguages', JSON.stringify(data[0]))
+                    sessionStorage.setItem('isoCodes', JSON.stringify(data[1]))
+                })
+        }
     }, [])
 
     return (
