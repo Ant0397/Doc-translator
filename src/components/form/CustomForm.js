@@ -47,6 +47,7 @@ export default function CustomForm() {
                             setFileId(null)
                             setTargetLanguageCode(null)
                             setTargetLanguageName(null)
+                            console.log('reset')
                         })
                 }
             })
