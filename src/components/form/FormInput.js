@@ -33,7 +33,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 break 
 
             case 'select':
-                
+                !targetLanguageCode && !targetLanguageName ? setValue(defaultValue) : null 
                 fileId ? setIsDisabled(false) : setIsDisabled(true) 
 
                 break 
@@ -89,7 +89,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
             return (
                 <div>
                     <select onChange={eventHandle} id="select" className="my-2 form-item" disabled={isDisabled}>
-                        <option id="default" value="default" selected>{value}</option>
+                        <option value="default" selected>{value}</option>
 
                         { allLanguages && isoCodes ? 
                             allLanguages.map((language) => (
