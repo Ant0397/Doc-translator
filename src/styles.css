@@ -44,12 +44,12 @@
     outline: none;
 }
 
-input[type=submit]:hover {
+.form-btn:hover {
     background-color: rgb(11, 53, 73);
     color: white;
 }
 
-.form-item:disabled, input[type=submit]:disabled {
+.form-item:disabled {
     cursor: default;
     color: rgba(110, 110, 110, 0.445);
     background-color: rgba(255, 255, 255, 0.184);

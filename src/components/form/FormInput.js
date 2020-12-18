@@ -22,6 +22,10 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     // sets input state according to journey progress 
     useEffect(() => {
         switch (type) {
+            case 'file-hidden':
+                fileId ? setIsDisabled(true) : setIsDisabled(false)
+                break 
+
             case 'select':
                 fileId ? setIsDisabled(false) : setIsDisabled(true) 
                 break 
@@ -46,7 +50,6 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                         if (data.id) {
                             setFileId(data.id)
                             setValue('File Uploaded')
-                            setIsDisabled(true)
                         }
                         setInstruction(data.message)
                     })
@@ -63,6 +66,13 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                     setTargetLanguageCode(e.target.value)
                     setTargetLanguageName(selected.innerText)
                 }
+                break 
+
+            case 'reset':
+                setFileId(null)
+                setTargetLanguageName(null)
+                setTargetLanguageCode(null)
+
         }
     }
 
@@ -95,8 +105,15 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
         case 'submit':
             return (
                 <div>
-                    <input disabled={isDisabled} className="my-2 form-item" type="submit" value={value}></input>
+                    <input disabled={isDisabled} className="my-2 form-item form-btn" type={type} value={value} />
                 </div>
             )
+
+        case 'reset': 
+            return (
+                <div>
+                    <input onClick={eventHandle} disabled={isDisabled} className="my-2 form-item form-btn" type="button" value={value} />
+                </div>
+            ) 
     }
 }

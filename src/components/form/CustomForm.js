@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { FileContext } from '../../context/FileContext'
 import { LanguageContext } from '../../context/LanguageContext'
@@ -17,6 +17,8 @@ export default function CustomForm() {
         targetLanguageName, setTargetLanguageName, 
         isoCodes, setIsoCodes
     ] = useContext(LanguageContext)
+
+    const [error, setError] = useState(false)
 
     let history = useHistory()
 
@@ -41,9 +43,7 @@ export default function CustomForm() {
                     res.json()
                         .then(data => {
                             setInstruction(data.message)
-                            setTimeout(() => {
-                                location.reload()
-                            }, 2000)
+                            setError(true)
                         })
                 }
             })
@@ -54,6 +54,11 @@ export default function CustomForm() {
             <FormInput disabledByDefault={false} type="file" defaultValue="Select File" />
             <FormInput disabledByDefault={true} type="select" defaultValue="Languages" />
             <FormInput disabledByDefault={true} type="submit" defaultValue="Translate" />
+            { error ? 
+                <FormInput disabledByDefault={false} type="reset" defaultValue="Reset" /> 
+            :
+                null    
+            }
         </form>
     )
 }
