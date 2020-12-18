@@ -24,11 +24,14 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
         switch (type) {
             case 'file':
                 fileId ? setIsDisabled(true) : setIsDisabled(false)
-                value !== defaultValue ? setValue(defaultValue) : null
+                fileId ? setValue('File Uploaded') : setValue(defaultValue)
                 break 
 
             case 'select':
+                let selected = document.querySelector('option:checked')
+                targetLanguageCode && targetLanguageName ? selected.value = targetLanguageCode : selected.value = 'default'
                 fileId ? setIsDisabled(false) : setIsDisabled(true) 
+
                 break 
 
             case 'submit':
@@ -50,7 +53,6 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                     .then(data => {
                         if (data.id) {
                             setFileId(data.id)
-                            setValue('File Uploaded')
                         }
                         setInstruction(data.message)
                     })
@@ -74,6 +76,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 setTargetLanguageName(null)
                 setTargetLanguageCode(null)
                 setInstruction('Upload a document to begin (.doc, .docx)')
+           
 
         }
     }
