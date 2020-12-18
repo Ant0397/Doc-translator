@@ -10,6 +10,8 @@ export default function RecentFile({ file }) {
         fileId, setFileId, 
         supportedFiles, setSupportedFiles, 
         instruction, setInstruction,
+        translatedContent, setTranslatedContent,
+        recentFiles, setRecentFiles
     ] = useContext(FileContext)
     
     let history = useHistory()
@@ -21,8 +23,9 @@ export default function RecentFile({ file }) {
                 if (res.status !== 204) {
                     res.json()
                         .then(data => setInstruction(data.message))
+                } else {
+                    setRecentFiles(recentFiles.filter(recentFile => recentFile._id !== file._id))
                 }
-                return
             })
     }
 

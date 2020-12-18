@@ -29,15 +29,11 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 } else {
                     setIsDisabled(false)
                     setValue(defaultValue)
-                    // removing file fomr hidden upload field
-                    document.getElementById('file-hidden').value = ''
                 }
                 break 
 
             case 'select':
-                !targetLanguageCode && !targetLanguageName ? document.querySelector('select').value = 'default' : null 
                 fileId ? setIsDisabled(false) : setIsDisabled(true) 
-
                 break 
 
             case 'submit':
@@ -70,11 +66,12 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 setTargetLanguageName(e.target.selectedOptions[0].innerText)
                 break 
 
-            case 'reset':
+            case 'resetForm':
                 setFileId(null)
                 setTargetLanguageName(null)
                 setTargetLanguageCode(null)
                 setInstruction('Upload a document to begin (.doc, .docx)')
+                document.querySelector('form').reset()
         }
     }
 
@@ -111,10 +108,10 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 </div>
             )
 
-        case 'reset': 
+        case 'resetForm': 
             return (
                 <div>
-                    <input id="reset" onClick={eventHandle} disabled={isDisabled} className="my-2 form-item form-btn" type="button" value={value} />
+                    <input id="resetForm" onClick={eventHandle} disabled={isDisabled} className="my-2 form-item form-btn" type="button" value={value} />
                 </div>
             ) 
     }

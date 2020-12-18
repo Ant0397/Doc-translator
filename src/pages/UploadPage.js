@@ -4,7 +4,6 @@ import Header from '../components/Header'
 import RecentFiles from '../components/file-icons/RecentFiles'
 import { FileContext } from '../context/FileContext'
 import { LanguageProvider } from '../context/LanguageContext'
-import FileService from '../services/FileService'
 
 export default function UploadPage() {
     const [
@@ -19,11 +18,7 @@ export default function UploadPage() {
     useEffect(() => {
         setFileId(null)
         setInstruction('Upload a document to begin (.doc, .docx)')
-        FileService.getRecentFiles()
-            .then(data => {
-                data.files ? setRecentFiles(data.files) : setRecentFiles(data.message)
-            })
-    }, [])
+    }, [])  
 
     return (
         <div className="page">

@@ -22,6 +22,7 @@ export default function CustomForm() {
 
     function toggleDisabled(children, toggle) {
         for (let child of children) {
+            if (child.childNodes[0].id == 'file-hidden') continue
             if (child.childNodes[0].disabled == toggle) continue
             child.childNodes[0].disabled = toggle  
         }
@@ -53,7 +54,7 @@ export default function CustomForm() {
             <FormInput disabledByDefault={true} type="submit" defaultValue="Translate" />
            
             { instruction && instruction.includes('Translation Failed') ? 
-                <FormInput disabledByDefault={false} type="reset" defaultValue="Reset" /> 
+                <FormInput disabledByDefault={false} type="resetForm" defaultValue="Reset" /> 
             :
                 null    
             }
