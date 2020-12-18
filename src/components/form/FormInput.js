@@ -33,7 +33,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 break 
 
             case 'select':
-                !targetLanguageCode && !targetLanguageName ? setValue(defaultValue) : null
+                
                 fileId ? setIsDisabled(false) : setIsDisabled(true) 
 
                 break 
@@ -63,9 +63,9 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 break
 
             case 'select':
-                setInstruction(`Your Document Will Be Translated Into ${e.target.innerText}`)
+                setInstruction(`Your Document Will Be Translated Into ${e.target.selectedOptions[0].innerText}`)
                 setTargetLanguageCode(e.target.value)
-                setTargetLanguageName(e.target.innerText)
+                setTargetLanguageName(e.target.selectedOptions[0].innerText)
                 break 
 
             case 'reset':
@@ -89,7 +89,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
             return (
                 <div>
                     <select onChange={eventHandle} id="select" className="my-2 form-item" disabled={isDisabled}>
-                        <option value="default" selected>{value}</option>
+                        <option id="default" value="default" selected>{value}</option>
 
                         { allLanguages && isoCodes ? 
                             allLanguages.map((language) => (
