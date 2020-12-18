@@ -61,7 +61,7 @@ input[type=submit]:hover {
     border: 3px solid rgb(11, 53, 73);
 }
 
-h2 {
+h2, h6 {
     text-align: center;
     color: rgb(11, 53, 73);
 }
@@ -102,6 +102,38 @@ h2 {
     border-left: 2px solid rgb(11, 53, 73);
 }   
 
+.files-header {
+    margin-top: 100px;
+    margin-bottom: 20px; 
+}
+
+.wrapper {
+    border-radius: 20px;
+    width: 200px;
+    height: 85%;
+    overflow-wrap: break-word;
+    transition-duration: 200ms;
+}
+
+.wrapper:hover {
+    background-color: rgba(121, 158, 190, 0.509);
+    cursor: pointer;
+}
+
+.wrapper.selected {
+    background-color: rgba(121, 158, 190, 0.509);
+}
+
+.fa-times.circle {
+    transition-duration: 200ms;
+}
+
+.fa-times-circle:hover {
+    background-color: rgba(121, 158, 190, 0.509);
+    border-radius: 50%;
+    cursor: pointer;
+} 
+
 @media only screen and (max-width: 767px) {
     .sticky .nav-item.left {
         margin-right: 0;
@@ -125,51 +157,3 @@ h2 {
       width: 200px;
     }
 }
-
-/*
-.recents {
-    display: flex;
-    justify-content: space-evenly;
-    flex-wrap: wrap;
-    margin-top: 3vh;
-}
-
-.wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 200px;
-    height: 85%;
-    padding: 10px;
-    overflow-wrap: break-word;
-}
-
-.wrapper:hover {
-    background-color: rgba(241, 90, 90, 0.623);
-    border-radius: 20px;
-    cursor: pointer;
-}
-
-.wrapper.selected {
-    background-color: rgba(241, 90, 90, 0.623);
-    border-radius: 20px;
-}
-
-i {
-    margin: 2px;
-}
-
-p {
-    margin: 1vh;
-    text-align: center;
-}
-
-.recents-container {
-    margin-top: 10vh;
-}
-
-.fa-times-circle:hover {
-    background-color: rgba(241, 90, 90, 0.623);
-    border-radius: 50%;
-    cursor: pointer;
-} */

@@ -57,7 +57,7 @@ export default function TranslationPage() {
                     </Col>
                     <Col className="d-flex justify-content-center" md="6">
                         { translatedContent ?
-                            <Doc position="right" title={`Translation ${language}`} id="translation" content={translatedContent} />
+                            <Doc position="right" title={`${language} Translation`} id="translation" content={translatedContent} />
                         :
                             null 
                         }

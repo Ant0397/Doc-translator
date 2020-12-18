@@ -18,10 +18,22 @@ module.exports = {
             .then(res => res)
     },
 
+    getRecentFiles: () => {
+        return fetch('/api/file/recent-files')
+            .then(res => res.json())
+            .then(data => data)
+    },
+
     createDoc: (fileId) => {
         return fetch(`/api/file/create-doc/${fileId}`)
             .then(res => res)
-    }
+    },
+
+    deleteFile: (fileId) => {
+        return fetch(`/api/file/${fileId}`, {
+            method: 'DELETE'
+        }).then(res => res)
+    }   
 
     // delete in progress
 }

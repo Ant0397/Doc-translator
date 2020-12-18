@@ -12,7 +12,7 @@ const tempDirectory = path.join(__dirname, '../', 'tmp')
 router.use(upload({
     useTempFiles: true,
     tempFileDir: tempDirectory
-}))
+}))     
 
 
 // @method POST 
@@ -45,6 +45,19 @@ router.post('/upload', async (req, res) => {
         return res.status(201).json({ id: newFile._id, message: 'Select Target Language' })
     } catch (e) {
         return res.status(500).json({ message: e.message })
+    }
+})
+
+// @method GET
+// @route /api/file/recent-files
+// @desc get recently translated files 
+// @access public
+router.get('/recent-files', async (req, res) => {
+    try {
+        let files = await File.find()
+        res.status(200).json({ files })
+    } catch (e) {
+        res.status(500).json({ message: e.message })
     }
 })
 
@@ -101,6 +114,19 @@ router.get('/download/:path',  (req, res) => {
         setTimeout(() => {
             fs.unlinkSync(filePath)
         }, 500)
+})
+
+// @method DELETE
+// @route /api/file/:id
+// @desc deletes file from db
+// @access public
+router.delete('/:id', findFile, async (req, res) => {
+    try {
+        await File.deleteOne({ _id: req.params.id })
+        return res.sendStatus(204)
+    } catch (e) {
+        return res.status(500).json({ message: e.message })
+    }
 })
 
 

@@ -45,7 +45,7 @@ export default function CustomForm() {
     }
 
     return (
-        <form onSubmit={submitForm} className="mt-5 d-flex flex-column justify-content-center align-items-center">
+        <form onSubmit={submitForm} className="my-5 d-flex flex-column justify-content-center align-items-center">
             <FormInput disabledByDefault={false} type="file" defaultValue="Select File" />
             <FormInput disabledByDefault={true} type="select" defaultValue="Languages" />
             <FormInput disabledByDefault={true} type="submit" defaultValue="Translate" />
