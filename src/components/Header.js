@@ -6,7 +6,7 @@ export default function Header() {
 
     return (
         <div className="d-flex justify-content-center align-items-center header">
-            <h1 className="display-3 title">{instruction}</h1>
+            <h1 className="title">{instruction}</h1>
         </div>
     )
 }

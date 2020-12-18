@@ -10,7 +10,11 @@ export default function RecentFiles({ files }) {
             </Row>
             <Row className="d-flex justify-content-center">
                     { files.map((file) => (
-                        <RecentFile key={file._id} file={file} />
+                        
+                        file.translatedContent ?
+                            <RecentFile key={file._id} file={file} />
+                        : 
+                            null 
                     ))}
             </Row>
         </Container>

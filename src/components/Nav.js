@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useHistory } from 'react-router-dom'
 import { FileContext } from '../context/FileContext'
 import FileService from '../services/FileService'
 
 export default function Nav() {
-    const [sticky, setSticky] = useState(null)
-
     const [
         fileId, setFileId, 
         supportedFiles, setSupportedFiles, 
@@ -42,10 +40,9 @@ export default function Nav() {
     useEffect(() => {
         setInstruction('Your Document Is Ready')
 
-        let navElement = document.getElementById('nav')
         let navContainerElement = document.getElementById('nav-container')
-
-        setSticky(navElement.offsetTop)
+        let navElement = document.getElementById('nav')
+        let sticky = navElement.offsetTop
 
         window.onscroll = () => {
             if (window.pageYOffset > sticky) {
