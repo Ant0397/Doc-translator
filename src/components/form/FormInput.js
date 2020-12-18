@@ -63,9 +63,9 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 break
 
             case 'select':
-                setInstruction(`Your Document Will Be Translated Into ${e.target.value}`)
+                setInstruction(`Your Document Will Be Translated Into ${e.target.innerText}`)
                 setTargetLanguageCode(e.target.value)
-                setTargetLanguageName(selected.innerText)
+                setTargetLanguageName(e.target.innerText)
                 break 
 
             case 'reset':
