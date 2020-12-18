@@ -112,7 +112,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
         case 'reset': 
             return (
                 <div>
-                    <input onClick={eventHandle} disabled={isDisabled} className="my-2 form-item form-btn" type="button" value={value} />
+                    <input id="reset" onClick={eventHandle} disabled={isDisabled} className="my-2 form-item form-btn" type="button" value={value} />
                 </div>
             ) 
     }
