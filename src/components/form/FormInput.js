@@ -34,7 +34,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
             case 'submit':
                 targetLanguageCode && targetLanguageName ? setIsDisabled(false) : setIsDisabled(true) 
         }
-    }, [])
+    })
 
     function eventHandle(e) {
         switch (e.target.id) {
