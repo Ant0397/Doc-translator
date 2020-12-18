@@ -8,7 +8,7 @@
     "devServer": "NODE_ENV=dev nodemon server.js",
     "prodServer": "node server.js",
     "start": "concurrently \"npm run build\" \"npm run prodServer\"",
-    "dev": "concurrently \"npm run build\" \"npm run server\""
+    "dev": "concurrently \"npm run build\" \"npm run devServer\""
   },
   "repository": {
     "type": "git",

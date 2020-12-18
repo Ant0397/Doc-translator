@@ -17,7 +17,7 @@ router.use(upload({
 
 // @method POST 
 // @route /api/file/upload
-// @desc extract file content and upload to DB
+// @desc extract file content and save to directory
 // @access public
 router.post('/upload', async (req, res) => {
     // if upload failed, abort
