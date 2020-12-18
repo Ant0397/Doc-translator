@@ -19,7 +19,7 @@ export function FileProvider({ children }) {
             .then(data => {
                 data.files ? setRecentFiles(data.files) : setRecentFiles(data.message)
             })
-    })
+    }, [])
 
     return (
         <FileContext.Provider 
