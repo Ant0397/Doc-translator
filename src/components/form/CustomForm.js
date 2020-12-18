@@ -40,8 +40,10 @@ export default function CustomForm() {
                 } else {
                     res.json()
                         .then(data => {
-                            location.reload()
                             setInstruction(data.message)
+                            setTimeout(() => {
+                                location.reload()
+                            }, 2000)
                         })
                 }
             })
