@@ -40,7 +40,7 @@ export default function CustomForm() {
                 } else {
                     res.json()
                         .then(data => {
-                            window.reload()
+                            location.reload()
                             setInstruction(data.message)
                         })
                 }
