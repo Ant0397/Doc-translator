@@ -22,7 +22,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     // sets input state according to journey progress 
     useEffect(() => {
         switch (type) {
-            case 'file-hidden':
+            case 'file':
                 fileId ? setIsDisabled(true) : setIsDisabled(false)
                 break 
 
