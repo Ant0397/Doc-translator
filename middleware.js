@@ -62,7 +62,7 @@ const translateChunk = (chunk, language, textType) => {
     }).then(data => {
         return data.data[0].translations[0].text
     }).catch(e => {
-        console.log(e.response)
+        return e
     })
 }
 
