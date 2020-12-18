@@ -1,9 +1,12 @@
 const router = require('express').Router()
 const axios = require('axios')
-const findFile = require('./file').findFile
+const { findFile, translateChunk, chunkContent } = require('../middleware')
 
-// GET languages
-router.get('/get-languages', (req, res) => {
+// @method GET
+// @route /api/languages
+// @desc retrieves supported lagnguages
+// @acces public
+router.get('/', (req, res) => {
 
     // axios({
     //     method: 'GET',
@@ -43,59 +46,30 @@ router.get('/get-languages', (req, res) => {
     res.json(languages)
 })
 
-// POST translate
+// @method POST 
+// @route /api/languages/translate
+// @desc translate file content and save to DB
+// @access public
 router.post('/translate', findFile, async (req, res) => {
-    let chunkedContent = chunkContent(res.file.content)
+    let chunkedContent = chunkContent(req.file.content)
     let translatedChunks = []
 
-    for (let chunk of chunkedContent) {
-        let translatedChunk = await translateChunk(chunk, req.body.language, res.file.textType)
-        translatedChunks.push(translatedChunk)
-    }
-    
     try {
-        res.file.targetLang = req.body.nativeName
-        res.file.translatedContent = translatedChunks.join()
-        res.file.save()
-        res.sendStatus(200)
+        for (let chunk of chunkedContent) {
+            let translatedChunk = await translateChunk(chunk, req.body.targetLangCode, req.file.textType)
+            translatedChunks.push(translatedChunk)
+        }
+
+        req.file.targetLangCode = req.body.targetLangCode
+        req.file.targetLangName = req.body.targetLangName.split(' ')[1]
+        req.file.translatedContent = translatedChunks.join()
+
+        await req.file.save()
+        return res.sendStatus(200)
     } catch (e) {
-        res.status(500).json({ message: e.message })
+        return res.status(500).json({ message: e.message })
     }
 })
-
-
-async function translateChunk(chunk, language, textType) 
-{
-    return await axios({
-        method: 'POST',
-        url: 'https://microsoft-translator-text.p.rapidapi.com/translate',
-        headers: {
-            'content-type': 'application/json',
-            'accept': 'application/json',
-            'x-rapidapi-host': 'microsoft-translator-text.p.rapidapi.com',
-            'x-rapidapi-key': process.env.RAPID_API_KEY,
-        }, params: {
-            'textType': textType,
-            'to': language,        
-            'api-version': '3.0'
-        }, data: [{
-            'Text': chunk
-        }]
-    }).then(data => {
-        return data.data[0].translations[0].text
-    }).catch(e => {
-        console.log(e.response)
-    })
-}
-
-function chunkContent(value) // separates file content into chunks of 5000 characters (API request limit)
-{
-    if (value.length < 4999) {
-        return [value]
-    } else {
-        return value.match(new RegExp('.{1,' + 4999 + '}', 'g'))
-    }
-}
 
 
 module.exports = router

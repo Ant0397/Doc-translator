@@ -1,5 +1,5 @@
 if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config({ path: './config/config.env' })
+    require('dotenv').config({ path: './config/local.env' })
 }
 
 // modules
@@ -11,7 +11,6 @@ const db = require('./config/db')
 const app = express()
 app.use(express.json())
 app.use(express.static('public'))
-app.set('view engine', 'ejs')
 
 
 // server setup
@@ -22,13 +21,14 @@ http.createServer(app).listen(PORT, () => {
 
 // DB
 db.connectDB()
+db.clearInProgress()
 
 // routes
 const pagesRouter = require('./routes/pages')
 app.use('/', pagesRouter)
 
 const fileRouter = require('./routes/file').router
-app.use('/file', fileRouter)
+app.use('/api/file', fileRouter)
 
 const languagesRouter = require('./routes/languages')
-app.use('/languages', languagesRouter)
+app.use('/api/languages', languagesRouter)

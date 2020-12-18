@@ -1,115 +1,133 @@
+// modules
 const router = require('express').Router()
 const path = require('path')
 const upload = require('express-fileupload')
-const mammoth = require('mammoth')
-const WordExtractor = require('word-extractor')
-const extractor = new WordExtractor()
 const HTMLtoDOCX = require('html-to-docx')
 const fs = require('fs')
 const File = require('../models/File')
+const { findFile, extract } = require('../middleware')
 
-// middleware
+// directory 
 const tempDirectory = path.join(__dirname, '../', 'tmp')
 router.use(upload({
     useTempFiles: true,
     tempFileDir: tempDirectory
-}))
+}))     
 
-const findFile = async (req, res, done) => {
-    let id = req.params.id || req.body.fileId
-    let file = await File.findById(id)
 
-    if (! file) {
-        res.status(404).json('File not found')
-    } else {
-        res.file = file
-        done()
-    }
-}
-
-// POST extract file content and upload to DB
+// @method POST 
+// @route /api/file/upload
+// @desc extract file content and upload to DB
+// @access public
 router.post('/upload', async (req, res) => {
-    if (fs.readdirSync(tempDirectory).length == 0) { // if upload failed, abort
-        res.sendStatus(500)
-    } else {
-        let fileContent
-        switch (req.files.file.mimetype) {
+    // if upload failed, abort
+    if (fs.readdirSync(tempDirectory).length == 0) return res.status(500).json({ message: 'Upload Failed, Please Try Again' })
+    
+    // extract content
+    let { file } = req.files
+    let fileContent
+    try {
+        fileContent = await extract(file)
+    } catch (e) {
+        return res.status(500).json({ message: e.message })
+    }
+    
+    // delete temp file
+    fs.unlinkSync(file.tempFilePath) 
 
-            case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
-                fileContent = await mammoth.convertToHtml({path: req.files.file.tempFilePath}).then(data => { // use mammoth to convert .docx to HTML
-                    return {
-                        'filename': req.files.file.name.split('.')[0],
-                        'ext': req.files.file.name.split('.')[1],
-                        'content': data.value,
-                        'textType': 'html'
-                    }
-                })
-                break
+    // return unsupported media status code if image tags are found
+    if (fileContent.content.includes('<img')) return res.status(415).json({ message: 'Please Ensure Your File Does Not Contain Images' })
 
-            case 'application/msword':
-                fileContent = await extractor.extract(req.files.file.tempFilePath).then(data => { // use extractor to rip .doc content
-                    return {
-                        'filename': req.files.file.name.split('.')[0],
-                        'ext': req.files.file.name.split('.')[1],
-                        'content': data.getBody(),
-                        'textType': 'plain',
-                    }
-                })
-                break
-        }
-
-        fs.unlinkSync(req.files.file.tempFilePath) // delete temp file
-
-        if (fileContent.content.includes('<img')) { // return unsupported media status code
-            res.status(415).json({ message: 'Please ensure your file does not contain images' })
-        } else {
-            // save to DB
-            let file = new File(fileContent)
-            try {
-                file.save()
-                res.status(201).json({ message: file.id })
-            } catch (e) {
-                res.status(500).json({ message: e.message })
-            }
-        }
+    // save to DB
+    let newFile = new File(fileContent)
+    try {
+        await newFile.save()
+        return res.status(201).json({ id: newFile._id, message: 'Select Target Language' })
+    } catch (e) {
+        return res.status(500).json({ message: e.message })
     }
 })
 
-// GET create document and download
-router.get('/download/:id', findFile, async (req, res) => {
+// @method GET
+// @route /api/file/recent-files
+// @desc get recently translated files 
+// @access public
+router.get('/recent-files', async (req, res) => {
     try {
-        let name = `${res.file.filename} (${res.file.targetLang}).${res.file.ext}`
+        let files = await File.find()
+        res.status(200).json({ files })
+    } catch (e) {
+        res.status(500).json({ message: e.message })
+    }
+})
+
+// @method GET
+// @route /api/file/:id
+// @desc get original and translated content 
+// @access public
+router.get('/:id', findFile, (req, res) => {
+    let { content, translatedContent, targetLangName } = req.file
+    return res.status(200).json({
+        content,
+        translatedContent,
+        targetLangName
+    })
+})
+
+// @method GET
+// @route /api/file/create-doc/:id
+// @desc converts html to docx and writes to directory 
+// @access public
+router.get('/create-doc/:id', findFile, async (req, res) => {
+    let { filename, targetLangName, ext, textType, translatedContent } = req.file
+
+    try {
+        let name = `${filename} (${targetLangName}).${ext}`
         let filePath = path.join(tempDirectory, name)
-        switch (res.file.textType) {
+        
+        // create file and write to dir
+        switch (textType) {
             case 'html':
-                let blob = await HTMLtoDOCX(res.file.translatedContent)
+                let blob = await HTMLtoDOCX(translatedContent)
                 fs.writeFileSync(filePath, blob)
                 break 
 
             case 'plain':
-                fs.writeFileSync(filePath, res.file.translatedContent)
+                fs.writeFileSync(filePath, translatedContent)
         }
-        
-        res.download(filePath)
 
-        setTimeout(() => {
-            fs.unlinkSync(filePath) // clear /tmp directory
-        }, 500)
+        res.status(201).json({ path: filePath })
     } catch (e) {
-        res.end(e)
+        return res.status(500).json({ message: e.message })
     }
 })
 
-router.get('/delete/:id', findFile, (req, res) => {
-    res.file.delete()
-    res.sendStatus(200)
+// @method GET
+// @route /api/file/download/:path
+// @desc create word document and download
+// @acces public
+router.get('/download/:path',  (req, res) => {
+        let filePath = req.params.path
+        res.download(filePath)
+
+        // clear /tmp directory 
+        setTimeout(() => {
+            fs.unlinkSync(filePath)
+        }, 500)
 })
 
-// GET file content
-router.get('/content/:id', findFile, (req, res) => {
-    res.json(res.file)
+// @method DELETE
+// @route /api/file/:id
+// @desc deletes file from db
+// @access public
+router.delete('/:id', findFile, async (req, res) => {
+    try {
+        await File.deleteOne({ _id: req.params.id })
+        return res.sendStatus(204)
+    } catch (e) {
+        return res.status(500).json({ message: e.message })
+    }
 })
 
 
 exports.router = router
-exports.findFile = findFile
