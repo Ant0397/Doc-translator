@@ -37,8 +37,8 @@ export default function RecentFile({ file }) {
     return (
         <div className="m-3">
             <FontAwesomeIcon onClick={deleteFile} className="ml-3 mb-1" icon={faTimesCircle} size="2x" />
-            <div className="d-flex flex-column align-items-center wrapper py-3 px-5">
-                <FontAwesomeIcon onClick={openFile} icon={faFileWord} size="6x" />
+            <div onClick={openFile} className="d-flex flex-column align-items-center wrapper py-3 px-5">
+                <FontAwesomeIcon icon={faFileWord} size="6x" />
                 <p className="mt-1 text-center">{`${file.filename}.${file.ext} ${file.targetLangName}`}</p>
             </div>
         </div>
