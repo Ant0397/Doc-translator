@@ -23,13 +23,17 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     useEffect(() => {
         switch (type) {
             case 'file':
-                fileId ? setIsDisabled(true) : setIsDisabled(false)
-                fileId ? setValue('File Uploaded') : setValue(defaultValue)
+                if (fileId) {
+                    setIsDisabled(true)
+                    setValue('File Uploaded')
+                } else {
+                    setIsDisabled(false)
+                    setValue(defaultValue)
+                }
                 break 
 
             case 'select':
-                let selected = document.querySelector('option:checked')
-                targetLanguageCode && targetLanguageName ? selected.value = targetLanguageCode : selected.value = 'default'
+                !targetLanguageCode && !targetLanguageName ? setValue(defaultValue) : null
                 fileId ? setIsDisabled(false) : setIsDisabled(true) 
 
                 break 
@@ -59,16 +63,9 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 break
 
             case 'select':
-                let selected = document.querySelector('option:checked')
-                if (selected.value == 'default') {
-                    setInstruction('Please Select A Language')
-                    setTargetLanguageCode(null)
-                    setTargetLanguageName(null)
-                } else {
-                    setInstruction(`Your Document Will Be Translated Into ${selected.innerText}`)
-                    setTargetLanguageCode(e.target.value)
-                    setTargetLanguageName(selected.innerText)
-                }
+                setInstruction(`Your Document Will Be Translated Into ${e.target.value}`)
+                setTargetLanguageCode(e.target.value)
+                setTargetLanguageName(selected.innerText)
                 break 
 
             case 'reset':
@@ -76,8 +73,6 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 setTargetLanguageName(null)
                 setTargetLanguageCode(null)
                 setInstruction('Upload a document to begin (.doc, .docx)')
-           
-
         }
     }
 
