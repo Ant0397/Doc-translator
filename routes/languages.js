@@ -57,6 +57,7 @@ router.post('/translate', findFile, async (req, res) => {
     try {
         for (let chunk of chunkedContent) {
             let translatedChunk = await translateChunk(chunk, req.body.targetLangCode, req.file.textType)
+            if (translatedChunk.message) return res.status(500).json({ message: translatedChunk.message })
             translatedChunks.push(translatedChunk)
         }
 
