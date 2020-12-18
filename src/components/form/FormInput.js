@@ -24,6 +24,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
         switch (type) {
             case 'file':
                 fileId ? setIsDisabled(true) : setIsDisabled(false)
+                value !== defaultValue ? setValue(defaultValue) : null
                 break 
 
             case 'select':
@@ -33,7 +34,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
             case 'submit':
                 targetLanguageCode && targetLanguageName ? setIsDisabled(false) : setIsDisabled(true) 
         }
-    })
+    }, [])
 
     function eventHandle(e) {
         switch (e.target.id) {
@@ -72,6 +73,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 setFileId(null)
                 setTargetLanguageName(null)
                 setTargetLanguageCode(null)
+                setInstruction('Upload a document to begin (.doc, .docx)')
 
         }
     }

@@ -18,8 +18,6 @@ export default function CustomForm() {
         isoCodes, setIsoCodes
     ] = useContext(LanguageContext)
 
-    const [error, setError] = useState(false)
-
     let history = useHistory()
 
     function toggleDisabled(children, toggle) {
@@ -43,7 +41,6 @@ export default function CustomForm() {
                     res.json()
                         .then(data => {
                             setInstruction(data.message)
-                            setError(true)
                         })
                 }
             })
@@ -54,7 +51,8 @@ export default function CustomForm() {
             <FormInput disabledByDefault={false} type="file" defaultValue="Select File" />
             <FormInput disabledByDefault={true} type="select" defaultValue="Languages" />
             <FormInput disabledByDefault={true} type="submit" defaultValue="Translate" />
-            { error ? 
+           
+            { instruction.includes('Translation Failed') ? 
                 <FormInput disabledByDefault={false} type="reset" defaultValue="Reset" /> 
             :
                 null    
