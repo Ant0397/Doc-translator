@@ -20,16 +20,16 @@ export default function CustomForm() {
 
     let history = useHistory()
 
-    function toggleForm(children, toggle) {
+    function toggleDisabled(children, toggle) {
         for (let child of children) {
-            if (child.childNodes[0][toggle]) continue
-            child.childNodes[0][toggle] = true  
+            if (child.childNodes[0].disabled == toggle) continue
+            child.childNodes[0].disabled = toggle  
         }
     }
 
     function submitForm(e) {
         e.preventDefault()
-        toggleForm(e.target.children, 'disabled')
+        toggleDisabled(e.target.children, true)
         setInstruction('Please Wait...')
         LanguageService.translate(fileId, targetLanguageCode, targetLanguageName)
             .then(res => {
@@ -41,7 +41,7 @@ export default function CustomForm() {
                     res.json()
                         .then(data => {
                             setInstruction(data.message)
-                            toggleForm(e.target.children, 'enabled')
+                            toggleDisabled(e.target.children, false)
                         })
                 }
             })
