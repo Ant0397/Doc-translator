@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "build": "webpack",
-    "server": "NODE_ENV=dev nodemon server.js",
+    "devServer": "NODE_ENV=dev nodemon server.js",
+    "prodServer": "node server.js",
+    "start": "concurrently \"npm run build\" \"npm run prodServer\"",
     "dev": "concurrently \"npm run build\" \"npm run server\""
   },
   "repository": {
@@ -25,7 +27,6 @@
     "axios": "^0.20.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.3.0",
-    "ejs": "^3.1.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.2.0",
     "html-to-docx": "^1.1.32",
