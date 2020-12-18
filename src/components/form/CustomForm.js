@@ -52,7 +52,7 @@ export default function CustomForm() {
             <FormInput disabledByDefault={true} type="select" defaultValue="Languages" />
             <FormInput disabledByDefault={true} type="submit" defaultValue="Translate" />
            
-            { instruction.includes('Translation Failed') ? 
+            { instruction && instruction.includes('Translation Failed') ? 
                 <FormInput disabledByDefault={false} type="reset" defaultValue="Reset" /> 
             :
                 null    
