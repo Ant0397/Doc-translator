@@ -29,11 +29,13 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 } else {
                     setIsDisabled(false)
                     setValue(defaultValue)
+                    // removing file fomr hidden upload field
+                    document.getElementById('file-hidden').value = ''
                 }
                 break 
 
             case 'select':
-                !targetLanguageCode && !targetLanguageName ? setValue(defaultValue) : null 
+                !targetLanguageCode && !targetLanguageName ? document.querySelector('select').value = 'default' : null 
                 fileId ? setIsDisabled(false) : setIsDisabled(true) 
 
                 break 
