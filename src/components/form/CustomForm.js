@@ -40,14 +40,8 @@ export default function CustomForm() {
                 } else {
                     res.json()
                         .then(data => {
+                            window.reload()
                             setInstruction(data.message)
-
-                            // reset form
-                            toggleDisabled(e.target.children, false)
-                            setFileId(null)
-                            setTargetLanguageCode(null)
-                            setTargetLanguageName(null)
-                            console.log('reset')
                         })
                 }
             })
