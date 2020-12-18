@@ -22,9 +22,9 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     // sets input state according to journey progress 
     useEffect(() => {
         switch (type) {
-            case 'select':
-                fileId ? setIsDisabled(false) : setIsDisabled(true) 
-                break 
+            // case 'select':
+            //     fileId ? setIsDisabled(false) : setIsDisabled(true) 
+            //     break 
 
             case 'submit':
                 targetLanguageCode && targetLanguageName ? setIsDisabled(false) : setIsDisabled(true) 
