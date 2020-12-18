@@ -39,8 +39,10 @@ export default function CustomForm() {
                     return history.push('/translation')
                 } else {
                     res.json()
-                        .then(data => setInstruction(data.message))
-                        toggleForm(e.target.children, 'enabled')
+                        .then(data => {
+                            setInstruction(data.message)
+                            toggleForm(e.target.children, 'enabled')
+                        })
                 }
             })
     }
