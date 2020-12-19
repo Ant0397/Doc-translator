@@ -60,6 +60,8 @@
     background-color: white;
     color: rgb(11, 53, 73);
     border: 3px solid rgb(11, 53, 73);
+    max-width: 99vw;
+    overflow-wrap: break-word;
 }
 
 h2, h6 {
