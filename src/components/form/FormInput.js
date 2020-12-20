@@ -92,7 +92,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
 
                         { allLanguages && isoCodes ? 
                             allLanguages.map((language) => (
-                                <option key={isoCodes[allLanguages.indexOf(language)]} value={isoCodes[allLanguages.indexOf(language)]}>{`${language.name} (${language.nativeName})`}</option>
+                                <option key={allLanguages.indexOf(language)} value={isoCodes[allLanguages.indexOf(language)]}>{`${language.name} (${language.nativeName})`}</option>
                             ))    
                         : 
                             null
