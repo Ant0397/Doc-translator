@@ -17,7 +17,7 @@ router.use(upload({
 
 // @method POST 
 // @route /api/file/upload
-// @desc extract file content and save to directory
+// @desc upload file to directory and extract content
 // @access public
 router.post('/upload', async (req, res) => {
     // if upload failed, abort
@@ -38,14 +38,7 @@ router.post('/upload', async (req, res) => {
     // return unsupported media status code if image tags are found
     if (fileContent.content.includes('<img')) return res.status(415).json({ message: 'Please Ensure Your File Does Not Contain Images' })
 
-    // save to DB
-    let newFile = new File(fileContent)
-    try {
-        await newFile.save()
-        return res.status(201).json({ id: newFile._id, message: 'Select Language' })
-    } catch (e) {
-        return res.status(500).json({ message: e.message })
-    }
+    return res.status(201).json({ file: fileContent, message: 'Select Language' })
 })
 
 // @method GET
@@ -74,15 +67,15 @@ router.get('/:id', findFile, (req, res) => {
     })
 })
 
-// @method GET
-// @route /api/file/create-doc/:id
+// @method POST
+// @route /api/file/create-doc
 // @desc converts html to docx and writes to directory 
 // @access public
-router.get('/create-doc/:id', findFile, async (req, res) => {
-    let { filename, targetLangName, ext, textType, translatedContent } = req.file
+router.post('/create-doc', async (req, res) => {
+    let { filename, targetLangName, ext, textType, translatedContent } = req.body.file
 
     try {
-        let name = `${filename} (${targetLangName}).${ext}`
+        let name = `${filename} ${targetLangName}.${ext}`
         let filePath = path.join(tempDirectory, name)
         
         // create file and write to dir

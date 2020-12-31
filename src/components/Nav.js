@@ -5,7 +5,7 @@ import FileService from '../services/FileService'
 
 export default function Nav() {
     const [
-        fileId, setFileId, 
+        file, setFile, 
         supportedFiles, setSupportedFiles, 
         instruction, setInstruction
     ] = useContext(FileContext)
@@ -15,17 +15,15 @@ export default function Nav() {
     function handleEvent(e) {
         switch (e.target.id) {
             case 'reset':
-                sessionStorage.removeItem('fileId')
+                sessionStorage.removeItem('file')
                 return history.push('/')
 
             case 'download':
-                FileService.createDoc(sessionStorage.getItem('fileId'))
+                FileService.createDoc(file)
                     .then(res => {
                         if (res.status == 201) {
                             res.json()
-                                .then(data => {
-                                    window.location.href = `/api/file/download/${encodeURIComponent(data.path)}`
-                                })
+                                .then(data => window.location.href = `/api/file/download/${encodeURIComponent(data.path)}`)
                         } else {
                             res.json()
                                 .then(data => {

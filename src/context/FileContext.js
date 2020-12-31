@@ -1,10 +1,10 @@
-import React, { createContext, useEffect, useState } from 'react'
+import React, { createContext, useState } from 'react'
 
 export const FileContext = createContext()
 
 export function FileProvider({ children }) {
 
-    const [fileId, setFileId] = useState(null)
+    const [file, setFile] = useState(null)
     const [supportedFiles, setSupportedFiles] = useState([
         'application/msword', 
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
@@ -16,7 +16,7 @@ export function FileProvider({ children }) {
     return (
         <FileContext.Provider 
             value={[
-                fileId, setFileId, 
+                file, setFile, 
                 supportedFiles, setSupportedFiles, 
                 instruction, setInstruction, 
                 translatedContent, setTranslatedContent,

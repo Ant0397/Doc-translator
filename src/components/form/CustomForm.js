@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import { FileContext } from '../../context/FileContext'
 import { LanguageContext } from '../../context/LanguageContext'
@@ -7,7 +7,7 @@ import FormInput from './FormInput'
 
 export default function CustomForm() {
     const [
-        fileId, setFileId, 
+        file, setFile, 
         supportedFiles, setSupportedFiles, 
         instruction, setInstruction,
     ] = useContext(FileContext)
@@ -32,17 +32,18 @@ export default function CustomForm() {
         e.preventDefault()
         toggleDisabled(e.target.children, true)
         setInstruction('Please Wait...')
-        LanguageService.translate(fileId, targetLanguageCode, targetLanguageName)
+        LanguageService.translate(file, targetLanguageCode, targetLanguageName)
             .then(res => {
                 if (res.status == 200) {
                     // setting session storage allows state to persist on page reloads
-                    sessionStorage.setItem('fileId', fileId)
-                    return history.push('/translation')
-                } else {
                     res.json()
                         .then(data => {
-                            setInstruction(data.message)
+                            sessionStorage.setItem('file', JSON.stringify(data.file))
+                            return history.push('/translation')
                         })
+                } else {
+                    res.json()
+                        .then(data => setInstruction(data.message))
                 }
             })
     }

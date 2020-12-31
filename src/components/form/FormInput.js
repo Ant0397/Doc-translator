@@ -8,7 +8,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     const [value, setValue] = useState(defaultValue)
 
     const [
-        fileId, setFileId, 
+        file, setFile, 
         supportedFiles, setSupportedFiles, 
         instruction, setInstruction
     ] = useContext(FileContext)
@@ -23,7 +23,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     useEffect(() => {
         switch (type) {
             case 'file':
-                if (fileId) {
+                if (file) {
                     setIsDisabled(true)
                     setValue('File Uploaded')
                 } else {
@@ -33,7 +33,7 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
                 break 
 
             case 'select':
-                fileId ? setIsDisabled(false) : setIsDisabled(true) 
+                file ? setIsDisabled(false) : setIsDisabled(true) 
                 break 
 
             case 'submit':
@@ -42,7 +42,9 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
     })
 
     function eventHandle(e) {
-        switch (e.target.id) {
+        let { id, files, value, selectedOptions } = e.target
+
+        switch (id) {
             // clicks hidden file input to trigger upload
             case 'file': 
                 document.getElementById('file-hidden').click()
@@ -50,24 +52,24 @@ export default function FormInput({ disabledByDefault, type, defaultValue }) {
 
             // extracts file content and uploads to DB
             case 'file-hidden':
-                if (!supportedFiles.includes(e.target.files[0].type)) return setInstruction('File Type Unsupported')
-                FileService.upload(e.target.files[0])
+                if (!supportedFiles.includes(files[0].type)) return setInstruction('File Type Unsupported')
+                FileService.upload(files[0])
                     .then(data => {
-                        if (data.id) {
-                            setFileId(data.id)
+                        if (data.file) {
+                            setFile(data.file)
                         }
                         setInstruction(data.message)
                     })
                 break
 
             case 'select':
-                setInstruction(`Your Document Will Be Translated Into ${e.target.selectedOptions[0].innerText}`)
-                setTargetLanguageCode(e.target.value)
-                setTargetLanguageName(e.target.selectedOptions[0].innerText)
+                setInstruction(`Your Document Will Be Translated Into ${selectedOptions[0].innerText}`)
+                setTargetLanguageCode(value)
+                setTargetLanguageName(selectedOptions[0].innerText)
                 break 
 
             case 'resetForm':
-                setFileId(null)
+                setFile(null)
                 setTargetLanguageName(null)
                 setTargetLanguageCode(null)
                 setInstruction('Upload a document to begin (.doc, .docx)')

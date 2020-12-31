@@ -3,6 +3,7 @@ const mammoth = require('mammoth')
 const WordExtractor = require('word-extractor')
 const extractor = new WordExtractor()
 const axios = require('axios')
+const { v4: uuidv4 } = require('uuid')
 
 const findFile = async (req, res, next) => {
     let id = req.params.id || req.body.fileId
@@ -24,6 +25,10 @@ const extract = async (file) => {
         case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
             return await mammoth.convertToHtml({path: tempFilePath}).then(data => { // use mammoth to convert .docx to HTML
                 return {
+                    'id': uuidv4(),
+                    'targetLangCode': '',
+                    'targetLangName': '',
+                    'translatedContent': '',
                     'filename': name.split('.')[0],
                     'ext': name.split('.')[1],
                     'content': data.value,
@@ -34,6 +39,10 @@ const extract = async (file) => {
         case 'application/msword':
             return await extractor.extract(tempFilePath).then(data => { // use extractor to rip .doc content
                 return {
+                    'id': uuidv4(),
+                    'targetLangCode': '',
+                    'targetLangName': '',
+                    'translatedContent': '',
                     'filename': name.split('.')[0],
                     'ext': name.split('.')[1],
                     'content': data.getBody(),

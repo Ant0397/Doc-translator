@@ -24,9 +24,14 @@ module.exports = {
             .then(data => data)
     },
 
-    createDoc: (fileId) => {
-        return fetch(`/api/file/create-doc/${fileId}`)
-            .then(res => res)
+    createDoc: (file) => {
+        return fetch('/api/file/create-doc', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'Application/Json'
+            },
+            body: JSON.stringify({ file })
+        }).then(res => res)
     },
 
     deleteFile: (fileId) => {

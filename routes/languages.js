@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const axios = require('axios')
-const { findFile, translateChunk, chunkContent } = require('../middleware')
+const { translateChunk, chunkContent } = require('../middleware')
 
 // @method GET
 // @route /api/languages
@@ -27,26 +27,23 @@ router.get('/', (req, res) => {
 // @route /api/languages/translate
 // @desc translate file content and save to DB
 // @access public
-router.post('/translate', findFile, async (req, res) => {
-    let chunkedContent = chunkContent(req.file.content)
+router.post('/translate', async (req, res) => {
+    let { file, targetLangCode, targetLangName, translatedContent } = req.body
+
+    let chunkedContent = chunkContent(file.content)
     let translatedChunks = []
 
-    try {
-        for (let chunk of chunkedContent) {
-            let translatedChunk = await translateChunk(chunk, req.body.targetLangCode, req.file.textType)
-            if (translatedChunk.message) return res.status(500).json({ message: 'Translation Failed - Please Check Server Logs For More Details' })
-            translatedChunks.push(translatedChunk)
-        }
-
-        req.file.targetLangCode = req.body.targetLangCode
-        req.file.targetLangName = req.body.targetLangName.split(' ')[1]
-        req.file.translatedContent = translatedChunks.join()
-
-        await req.file.save()
-        return res.sendStatus(200)
-    } catch (e) {
-        return res.status(500).json({ message: e.message })
+    for (let chunk of chunkedContent) {
+        let translatedChunk = await translateChunk(chunk, targetLangCode, file.textType)
+        if (translatedChunk.message) return res.status(500).json({ message: 'Translation Failed - Please Check Server Logs For More Details' })
+        translatedChunks.push(translatedChunk)
     }
+
+    file.targetLangCode = targetLangCode
+    file.targetLangName = targetLangName.split(' ')[1]
+    file.translatedContent = translatedChunks.join()
+
+    return res.status(200).json({ file })
 })
 
 

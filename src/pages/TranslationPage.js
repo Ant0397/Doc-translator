@@ -4,40 +4,24 @@ import Doc from '../components/Doc'
 import Header from '../components/Header'
 import Nav from '../components/Nav'
 import { FileContext } from '../context/FileContext'
-import FileService from '../services/FileService'
 import { Container, Col, Row } from 'reactstrap'
 
 export default function TranslationPage() {
     const [
-        fileId, setFileId, 
+        file, setFile, 
         supportedFiles, setSupportedFiles, 
         instruction, setInstruction
     ] = useContext(FileContext)
     
-    const [content, setContent] = useState(null)
-    const [translatedContent, setTranslatedContent] = useState(null)
-    const [language, setLanguage] = useState(null)
-
     let history = useHistory()
 
-    // use id saved in state to return file contents from DB
+    // set file from session storage on component mount 
     useEffect(() => {
-        if (!sessionStorage.getItem('fileId')) return history.push('/')
-
-        FileService.getFile(sessionStorage.getItem('fileId'))
-            .then(res => {
-                if (res.status == 200) {
-                    res.json()
-                        .then(data => {
-                            setContent(data.content)
-                            setTranslatedContent(data.translatedContent)
-                            setLanguage(data.targetLangName)
-                        })
-                } else {
-                    res.json()
-                        .then(data => setInstruction(data.message))
-                }
-            })
+        if (sessionStorage.getItem('file')) {
+            setFile(JSON.parse(sessionStorage.getItem('file')))
+        } else {
+            return history.push('/')
+        }
     }, [])
 
     return (
@@ -49,15 +33,15 @@ export default function TranslationPage() {
             <Container fluid>
                 <Row>
                     <Col className="d-flex justify-content-center" md="6">
-                        { content ?
-                            <Doc position="left" title="Original" id="original" content={content} />    
+                        { file && file.content ?
+                            <Doc position="left" title="Original" id="original" content={file.content} />    
                         :
                             null
                         }
                     </Col>
                     <Col className="d-flex justify-content-center" md="6">
-                        { translatedContent ?
-                            <Doc position="right" title={`${language} Translation`} id="translation" content={translatedContent} />
+                        { file && file.translatedContent ?
+                            <Doc position="right" title={`Translation ${file.targetLangName}`} id="translation" content={file.translatedContent} />
                         :
                             null 
                         }

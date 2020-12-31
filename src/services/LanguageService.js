@@ -12,13 +12,13 @@ module.exports = {
             })
     },
 
-    translate: (fileId, targetLangCode, targetLangName) => {
+    translate: (file, targetLangCode, targetLangName) => {
         return fetch('/api/languages/translate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'Application/Json'
             },
-            body: JSON.stringify({ fileId, targetLangCode, targetLangName })
+            body: JSON.stringify({ file, targetLangCode, targetLangName })
         }).then(res => res)
     }
 }
