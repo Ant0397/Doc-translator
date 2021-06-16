@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 // modules
 const express = require('express')
 const http = require('http')
-const db = require('./config/db')
+const connectDB = require('./config/db')
 
 // app init
 const app = express()
@@ -19,8 +19,8 @@ http.createServer(app).listen(PORT, () => {
     console.log(`Server running in ${process.env.NODE_ENV} on port: ${PORT}`)
 })
 
-// DB
-db.connectDB()
+// Connect Databases
+connectDB()
 
 // routes
 const pagesRouter = require('./routes/pages')
@@ -31,3 +31,6 @@ app.use('/api/file', fileRouter)
 
 const languagesRouter = require('./routes/languages')
 app.use('/api/languages', languagesRouter)
+
+const usersRouter = require('./routes/users')
+app.use('/api/users', usersRouter)

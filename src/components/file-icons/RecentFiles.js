@@ -2,6 +2,7 @@ import React from 'react'
 import { Container } from 'reactstrap'
 import RecentFile from './RecentFile'
 import { Row } from 'reactstrap'
+
 export default function RecentFiles({ files }) {
     return (
         <Container fluid className="mt-5">

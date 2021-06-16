@@ -4,7 +4,7 @@ const path = require('path')
 const upload = require('express-fileupload')
 const HTMLtoDOCX = require('html-to-docx')
 const fs = require('fs')
-const File = require('../models/File')
+const User = require('../models/User')
 const { findFile, extract } = require('../middleware')
 
 // directory 
@@ -47,7 +47,8 @@ router.post('/upload', async (req, res) => {
 // @access public
 router.get('/recent-files', async (req, res) => {
     try {
-        let files = await File.find()
+        let files = await User.find()
+        console.log(files)
         res.status(200).json({ files })
     } catch (e) {
         res.status(500).json({ message: e.message })

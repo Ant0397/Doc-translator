@@ -1,34 +1,20 @@
 const mongoose = require('mongoose')
-const File = require('../models/File')
 
 const connectDB = async () => {
     try {
-        const connection = await mongoose.connect(process.env.DB_STRING, {
+        const connection = await mongoose.createConnection(process.env.DB_STRING, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
 
-        console.log(`MongoDB connected: ${connection.connection.db.databaseName}`)
-
+        console.log(`MongoDB connected: ${connection.db.databaseName}`)
+        connection.db.collections()
+        .then(data => console.log(`DB Collection: ${data[0].collectionName}`))
     } catch (e) {
         console.error(e)
         process.exit(1)
     }
 }
 
-const clearInProgress = async () => { // removes files from DB that did not complete full translation process 
-    try {
-        let files = await File.find()
-        for (const file of files) {
-            if (file.translatedContent == null) {
-                file.remove()
-            }
-        }
-    } catch (e) {
-        console.error(e)
-        process.exit(1)
-    }       
-}
 
-exports.connectDB = connectDB
-exports.clearInProgress = clearInProgress
+module.exports = connectDB
